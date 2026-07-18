@@ -11,25 +11,21 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { height:100%; overflow:hidden; background:#0b1220; color:#dce8f5;
-    font-family:-apple-system,'Segoe UI',Roboto,sans-serif; touch-action:manipulation;
+    font-family:-apple-system,'Segoe UI',Roboto,sans-serif; touch-action:none;
     user-select:none; -webkit-user-select:none; overscroll-behavior:none; }
   #app { height:100%; display:flex; flex-direction:column; }
-
-  /* ---------- title screen ---------- */
   #title { position:fixed; inset:0; background:radial-gradient(120% 90% at 50% 0%, #16253f 0%, #0b1220 60%, #070c16 100%);
-    display:flex; flex-direction:column; align-items:center; overflow-y:auto; z-index:30; padding:max(20px,env(safe-area-inset-top)) 16px 40px; }
+    display:flex; flex-direction:column; align-items:center; overflow-y:auto; z-index:30; padding:max(20px,env(safe-area-inset-top)) 16px 40px; touch-action:pan-y; }
   #title h1 { font-size:34px; letter-spacing:1px; margin-top:18px; text-align:center;
     background:linear-gradient(180deg,#eaf6ff,#7ec8ff 60%,#3a7bd5); -webkit-background-clip:text; background-clip:text; color:transparent;
     filter:drop-shadow(0 2px 8px rgba(80,160,255,.35)); }
-  #title .sub { opacity:.65; font-size:13px; margin:6px 0 22px; text-align:center; }
+  #title .sub { opacity:.65; font-size:13px; margin:6px 0 18px; text-align:center; }
   .sectionLabel { font-size:12px; text-transform:uppercase; letter-spacing:2px; opacity:.55; margin:14px 0 8px; align-self:flex-start; }
   #races { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:420px; }
-  .raceBtn { background:#131f33; border:1px solid #263a58; border-radius:14px; padding:12px 6px 10px; text-align:center; cursor:pointer;
-    transition:transform .08s; }
+  .raceBtn { background:#131f33; border:1px solid #263a58; border-radius:14px; padding:12px 6px 10px; text-align:center; cursor:pointer; transition:transform .08s; }
   .raceBtn:active { transform:scale(.96); }
   .raceBtn.sel { border-color:var(--c); box-shadow:0 0 0 1px var(--c), 0 0 18px -4px var(--c); background:#182741; }
-  .raceBtn .ic { width:34px; height:34px; margin:0 auto 6px; border-radius:10px; background:var(--c);
-    box-shadow:0 0 14px -2px var(--c); }
+  .raceBtn .ic { width:34px; height:34px; margin:0 auto 6px; border-radius:10px; background:var(--c); box-shadow:0 0 14px -2px var(--c); }
   .raceBtn .nm { font-size:11.5px; font-weight:600; line-height:1.25; }
   .raceBtn .bd { font-size:9.5px; opacity:.55; margin-top:2px; }
   #diffs { display:flex; gap:8px; width:100%; max-width:420px; }
@@ -37,30 +33,26 @@
   .diffBtn.sel { border-color:#7ec8ff; box-shadow:0 0 0 1px #7ec8ff; background:#182741; }
   .diffBtn .d1 { font-size:13px; font-weight:600; }
   .diffBtn .d2 { font-size:9.5px; opacity:.55; margin-top:2px; }
-  #playBtn { margin-top:26px; width:100%; max-width:420px; padding:16px; font-size:18px; font-weight:700; letter-spacing:1px;
+  #playBtn { margin-top:22px; width:100%; max-width:420px; padding:16px; font-size:18px; font-weight:700; letter-spacing:1px;
     color:#06121f; background:linear-gradient(180deg,#9fd8ff,#4c9fe8); border:none; border-radius:16px; cursor:pointer;
     box-shadow:0 4px 24px -4px rgba(90,170,255,.5); }
   #playBtn:disabled { opacity:.35; box-shadow:none; }
-  #title .credit { margin-top:18px; font-size:10.5px; opacity:.4; text-align:center; line-height:1.5; }
-
-  /* ---------- HUD ---------- */
-  #hud { display:flex; align-items:center; gap:10px; padding:calc(6px + env(safe-area-inset-top)) 12px 6px; background:#0e1830;
-    border-bottom:1px solid #1d2c47; font-size:14px; font-weight:600; z-index:5; }
-  #hud .stat { display:flex; align-items:center; gap:4px; }
+  #title .credit { margin-top:16px; font-size:10.5px; opacity:.4; text-align:center; line-height:1.5; }
+  #hud { display:flex; align-items:center; gap:9px; padding:calc(6px + env(safe-area-inset-top)) 10px 6px; background:#0e1830;
+    border-bottom:1px solid #1d2c47; font-size:13.5px; font-weight:600; z-index:5; }
+  #hud .stat { display:flex; align-items:center; gap:3px; }
   #hud .grow { flex:1; }
-  .hudBtn { background:#182741; border:1px solid #2a3f61; color:#cfe4ff; border-radius:9px; padding:5px 10px;
+  .hudBtn { background:#182741; border:1px solid #2a3f61; color:#cfe4ff; border-radius:9px; padding:5px 9px;
     font-size:13px; font-weight:700; cursor:pointer; }
   #waveInfo { font-size:11px; padding:3px 12px 6px; background:#0e1830; display:flex; align-items:center; gap:8px; border-bottom:1px solid #16233c; }
   #waveInfo .nxt { opacity:.75; }
   #callBtn { background:#1d3a2a; border:1px solid #2f5f44; color:#9fe8b8; border-radius:8px; padding:4px 10px; font-size:11px; font-weight:700; cursor:pointer; }
-
-  /* ---------- board ---------- */
-  #boardWrap { flex:1; position:relative; overflow:hidden; background:#0a1424; }
-  canvas { display:block; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
-
-  /* ---------- bottom panel ---------- */
+  #boardWrap { flex:1; position:relative; overflow:hidden; background:#060b14; }
+  canvas { display:block; position:absolute; left:0; top:0; }
+  #zoomCtl { position:absolute; right:10px; top:10px; display:flex; flex-direction:column; gap:6px; z-index:6; }
+  #zoomCtl button { width:38px; height:38px; border-radius:10px; border:1px solid #2a3f61; background:rgba(14,24,48,.85); color:#cfe4ff; font-size:17px; font-weight:700; cursor:pointer; }
   #panel { background:#0e1830; border-top:1px solid #1d2c47; padding:6px 8px calc(8px + env(safe-area-inset-bottom)); z-index:5; }
-  #towerBar { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; }
+  #towerBar { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; touch-action:pan-x; }
   #towerBar::-webkit-scrollbar { display:none; }
   .tChip { flex:0 0 auto; width:64px; background:#131f33; border:1px solid #263a58; border-radius:11px; padding:6px 4px; text-align:center; cursor:pointer; }
   .tChip.sel { border-color:var(--c); box-shadow:0 0 0 1px var(--c); background:#182741; }
@@ -68,8 +60,8 @@
   .tChip .ti { width:22px; height:22px; margin:0 auto 3px; border-radius:6px; background:var(--c); }
   .tChip .tn { font-size:8.6px; line-height:1.15; height:20px; overflow:hidden; }
   .tChip .tc { font-size:10px; font-weight:700; color:#ffd86b; margin-top:1px; }
-  #infoBox { margin-top:6px; background:#131f33; border:1px solid #263a58; border-radius:11px; padding:8px 10px; font-size:11.5px;
-    line-height:1.45; display:none; }
+  #infoBox { position:absolute; left:8px; right:8px; bottom:8px; background:rgba(19,31,51,.96); border:1px solid #263a58; border-radius:11px; padding:8px 10px; font-size:11.5px;
+    line-height:1.45; display:none; z-index:7; box-shadow:0 8px 30px rgba(0,0,0,.6); }
   #infoBox.on { display:block; }
   #infoBox .row1 { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; }
   #infoBox .stats { opacity:.85; margin-top:3px; }
@@ -77,9 +69,7 @@
   #infoBox .acts { display:flex; gap:8px; margin-top:7px; }
   #infoBox .acts button { flex:1; padding:8px; border-radius:9px; border:1px solid #2a3f61; background:#182741; color:#cfe4ff; font-weight:700; font-size:12.5px; cursor:pointer; }
   #infoBox .acts .sellB { background:#3a1d24; border-color:#61302a; color:#ffb3a1; }
-
-  /* ---------- overlays ---------- */
-  #toast { position:fixed; left:50%; transform:translateX(-50%); bottom:30%; background:rgba(10,18,32,.92); border:1px solid #2a3f61;
+  #toast { position:fixed; left:50%; transform:translateX(-50%); bottom:32%; background:rgba(10,18,32,.92); border:1px solid #2a3f61;
     padding:8px 16px; border-radius:12px; font-size:13px; z-index:20; opacity:0; transition:opacity .25s; pointer-events:none; text-align:center; }
   #endScreen { position:fixed; inset:0; background:rgba(6,10,18,.9); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:40; padding:24px; text-align:center; }
   #endScreen h2 { font-size:32px; margin-bottom:10px; }
@@ -102,24 +92,29 @@
     <span class="grow" style="flex:1"></span>
     <button id="callBtn">▶ Send now</button>
   </div>
-  <div id="boardWrap"><canvas id="cv"></canvas></div>
+  <div id="boardWrap">
+    <canvas id="cv"></canvas>
+    <div id="zoomCtl" style="display:none">
+      <button id="zin">+</button><button id="zout">−</button><button id="zfit">⤢</button>
+    </div>
+    <div id="infoBox"></div>
+  </div>
   <div id="panel" style="display:none">
     <div id="towerBar"></div>
-    <div id="infoBox"></div>
   </div>
 </div>
 
 <div id="title">
   <h1>WINTERMAUL TD</h1>
-  <div class="sub">X10 Final &nbsp;·&nbsp; rebuilt from the original map data</div>
+  <div class="sub">X10 Final &nbsp;·&nbsp; the real map, rebuilt from the .w3x</div>
   <div class="sectionLabel">Choose your element</div>
   <div id="races"></div>
   <div class="sectionLabel">Difficulty</div>
   <div id="diffs"></div>
   <button id="playBtn" disabled>PLAY</button>
-  <div class="credit">Fan tribute to the classic Warcraft III map "Wintermaul TD X10".<br>
-  Towers, waves &amp; stats extracted from the original .w3x. Original artwork.<br>
-  Build a maze — creeps walk from the portal to your gate. Don't let them through!</div>
+  <div class="credit">Fan tribute to the Warcraft III map "Wintermaul TD X10 Final".<br>
+  Real terrain, creep routes, towers &amp; waves extracted from the original file.<br>
+  Creeps march from the top gates to the ship at the bottom dock. Pinch to zoom, drag to pan.</div>
 </div>
 
 <div id="endScreen">
@@ -130,7 +125,8 @@
 <div id="toast"></div>
 
 <script>
-const GAME_DATA = {"meta":{"name":"Wintermaul TD X10","lives":20,"gold":60,"waveGap":30,"firstGap":25,"bonusBase":10,"bonusInc":2,"sell":0.75},"races":[{"id":"crystal","name":"Crystal Castle","builder":"Crystal Molder","color":"#7ec8ff","towers":[{"id":"hgtw","name":"Crystal Shooter","cost":10,"dmin":10,"dmax":13,"cd":0.9,"range":750,"atk":"chaos","splash":0,"tip":"Basic tower of the crystal defense. The Crystal Shooter has relatively high chaos damage for its cost."},{"id":"hctw","name":"Crystal Blaster","cost":50,"dmin":41,"dmax":41,"cd":1.0,"range":700,"atk":"chaos","splash":1,"tip":"The second tower of crystal defense. Does much higher damage than the Shooter, and also deals splash damage."},{"id":"hwtw","name":"Crystal Fury","cost":175,"dmin":101,"dmax":120,"cd":0.25,"range":700,"atk":"chaos","splash":0,"tip":"The Crystal Fury is a fast attacking tower with high damage and critical strike. One of the deadliest towers of crystal defense."},{"id":"hhou","name":"Crystal Slower","cost":250,"dmin":271,"dmax":295,"cd":0.9,"range":800,"atk":"chaos","splash":1,"tip":"The Crystal Slower is one of the best slowing towers in the game. It deals splash damage and slows the enemies. It costs quite a bit, however.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"oC91","name":"Crystal Buster","cost":500,"dmin":750,"dmax":750,"cd":1.2,"range":900,"atk":"chaos","splash":1,"tip":"The Crystal Buster is like the Blaster. Th Buster, however, has a larger range, higher damage, and a greater splash. It's quite expensive, though."},{"id":"e000","name":"Crystal Dissolver","cost":750,"dmin":401,"dmax":599,"cd":0.15,"range":700,"atk":"chaos","splash":0,"tip":"This tower is very good but not as good as the Impaler. The Crystal Dissolver has a long range, high damage, and fast speed. It is expensive, but it's worth it."},{"id":"hatw","name":"Crystal Impaler","cost":1000,"dmin":500,"dmax":534,"cd":0.15,"range":1200,"atk":"chaos","splash":1,"tip":"Who needs a Dissolver when you have an Impaler!  This tower has the best splash of any tower EVER!!!!! Even if the damage isnt great it RULES!!!!!"}]},{"id":"aqua","name":"Aqua Lake","builder":"Aqua Summoner","color":"#3aa0ff","towers":[{"id":"h009","name":"Aqua Splasher","cost":15,"dmin":21,"dmax":24,"cd":0.4,"range":700,"atk":"normal","splash":1,"tip":"Basic tower of the Aqua Defense. It not the best tower but it gets the job done."},{"id":"h00A","name":"Aqua Caster","cost":45,"dmin":55,"dmax":58,"cd":0.5,"range":700,"atk":"magic","splash":1,"tip":"This Second tower of Aqua Lake is pretty good its has everything u need."},{"id":"h00B","name":"Aqua Cannon","cost":200,"dmin":149,"dmax":164,"cd":0.15,"range":850,"atk":"chaos","splash":1,"tip":"This is the Third Tower for your Aqua Defence. It has Good Damge,and Good Splash. what more could u want"},{"id":"h00D","name":"Aqua Guard","cost":300,"dmin":231,"dmax":234,"cd":0.4,"range":1000,"atk":"normal","splash":1,"tip":"This is the Fourth tower of Aqua Lake. This is one of the only good air towers in Aqua."},{"id":"h00C","name":"Aqua Lord","cost":450,"dmin":400,"dmax":414,"cd":0.3,"range":1200,"atk":"chaos","splash":1,"tip":"Good all around tower."},{"id":"h00E","name":"H2O","cost":800,"dmin":500,"dmax":514,"cd":0.15,"range":1500,"atk":"magic","splash":1,"tip":"This is the Final tower of your Aqua Defence. Great Splash, Range , and Damage."}]},{"id":"nature","name":"Earth Gate","builder":"Gaia's Servant","color":"#4cc94c","towers":[{"id":"emow","name":"Nature Pool","cost":10,"dmin":11,"dmax":14,"cd":1.0,"range":700,"atk":"pierce","splash":1,"tip":"Light earth tower, does 3-6, and some splash damage.   Attacks land and air units."},{"id":"hC80","name":"Terran Protector","cost":40,"dmin":38,"dmax":47,"cd":1.0,"range":700,"atk":"normal","splash":1,"tip":"Heavy earth tower, does medium damage. 31-38 damage, and splash damage.   Attacks land and air units."},{"id":"hC82","name":"Gaia's Box","cost":100,"dmin":76,"dmax":100,"cd":1.5,"range":700,"atk":"normal","splash":1,"tip":"Little is known of this box.  A gift from gaia, it has huge splash and magical damage.   Attacks land and air units."},{"id":"hC86","name":"Earth's Soul","cost":200,"dmin":361,"dmax":460,"cd":1.2,"range":700,"atk":"siege","splash":1,"tip":"The Earth's Soul does relatively high damage, and has a large splash. It has a tolerable cooldown time, and will make a good addition to your Earth lineup."},{"id":"eC83","name":"Gaia","cost":350,"dmin":400,"dmax":450,"cd":1.0,"range":750,"atk":"siege","splash":1,"tip":"A spitting image of Gaia with strength to match.   Attacks land and air units."},{"id":"e002","name":"Blaze","cost":800,"dmin":500,"dmax":550,"cd":1.0,"range":1250,"atk":"pierce","splash":1,"tip":"The highest tower in earth's defense. Fires a flaming arrow that has great splash, and \"blazing\" speed. Goodbye birdy!   Attacks land and air units."}]},{"id":"stone","name":"Stone Sanctuary","builder":"Stone Summoner","color":"#b0a08a","towers":[{"id":"oC14","name":"Pebble Tower","cost":10,"dmin":12,"dmax":20,"cd":0.5,"range":600,"atk":"siege","splash":1,"tip":"Beginning Stone Tower. Moderate splash damage.    Attacks land and air units."},{"id":"oC35","name":"Rock Blaster","cost":40,"dmin":31,"dmax":55,"cd":1.1,"range":450,"atk":"siege","splash":1,"tip":"Next in the Stone line is the Rock Blaster. This structure has higher damage and range, but attacks a tiny bit slower.   Attacks land and air units."},{"id":"hC53","name":"Stone Projector","cost":120,"dmin":111,"dmax":171,"cd":0.5,"range":700,"atk":"siege","splash":0,"tip":"One step for Stone, one giant leap for defense. The Stone Projector attacks a little slower, but it's damage is far higher.   Attacks land and air units."},{"id":"oC26","name":"Faerie Mage","cost":200,"dmin":311,"dmax":386,"cd":1.1,"range":500,"atk":"siege","splash":0,"tip":"This Stone Tower is a welome addition to the stone line. This tower reduces the armor of the attacked unit by 5 and does formitable damage on it's own.    Attacks land and air units.","sp":{"shred":5}},{"id":"hC97","name":"Stone Destroyer","cost":285,"dmin":351,"dmax":450,"cd":0.5,"range":1000,"atk":"siege","splash":0,"tip":"Good tower with some splash ability. Good damage, and decent cooldown speed."},{"id":"oC67","name":"Paralyzer","cost":350,"dmin":25,"dmax":25,"cd":7.5,"range":500,"atk":"siege","splash":0,"tip":"At first sight, the Paralyzer looks like one of those crappy towers. It doesn't kill units, but rather leaves them with ten hit points. Doesn't work on bosses. 1-1 damage +Leaves target with 10 hp   Attacks land and air units.","sp":{"leave10":true}},{"id":"h00F","name":"Rock Crusher","cost":650,"dmin":500,"dmax":599,"cd":0.15,"range":1200,"atk":"chaos","splash":1,"tip":"The ultimate Stone tower. Simply awesome."}]},{"id":"power","name":"Power Plant","builder":"Spark","color":"#ffe14c","towers":[{"id":"hC11","name":"Shock Tower","cost":10,"dmin":7,"dmax":7,"cd":0.6,"range":600,"atk":"normal","splash":0,"tip":"Light electric tower. Does light damage in moderate range. Attacks extremely fast. 4 damage.   Attacks land and air units."},{"id":"oC18","name":"Storm Caller","cost":40,"dmin":30,"dmax":30,"cd":0.8,"range":500,"atk":"normal","splash":0,"tip":"The Storm Caller is a large advance in the Electric line. It's damage is much higher, but it's range slightly lower. 30 damage.   Attacks land and air units."},{"id":"hC36","name":"Chain Lightning Caster","cost":100,"dmin":1,"dmax":1,"cd":2.0,"range":250,"atk":"normal","splash":0,"tip":"This may not do much physical damage, but it nails many enemies with it's chain lightning attack. Very short range and medium cooldown. 1 standard damage + Chain Lightning   Attacks land and air units.","sp":{"chain":6}},{"id":"oC60","name":"Thunder Rod","cost":200,"dmin":1,"dmax":1,"cd":2.0,"range":350,"atk":"normal","splash":0,"tip":"A truly helpful Tower for any situation, the Thunder Rod does basically no base damage. It removes 25% of any opponents current health. Doesn't work on bosses. 1-1 damage +25% enemy hp   Attacks land and air units.","sp":{"pctHp":0.25}},{"id":"hC32","name":"Sparkler","cost":285,"dmin":300,"dmax":349,"cd":0.4,"range":700,"atk":"normal","splash":0,"tip":"A special tower that has two separate attacks- one for ground and one for air. This is a very effective tower and one of the most well-rounded towers in the game."},{"id":"oC68","name":"Battery","cost":350,"dmin":280,"dmax":380,"cd":0.55,"range":700,"atk":"normal","splash":0,"tip":"A good mid-game tower. Good damage and speed."},{"id":"o00E","name":"Volt","cost":675,"dmin":500,"dmax":514,"cd":0.15,"range":1100,"atk":"chaos","splash":1,"tip":"The last in the line of Electricity. Has great damge,and speed. Just an awesome tower.   Attacks land and air units."}]},{"id":"tech","name":"Tech Center","builder":"Scientist","color":"#c0c8d0","towers":[{"id":"hC66","name":"Enhanced Arrow Tower","cost":7,"dmin":3,"dmax":3,"cd":1.0,"range":700,"atk":"normal","splash":0,"tip":"Light technology tower. Has a long range and decent damage. 3-7 damage.   Attacks land and air units."},{"id":"hC08","name":"Sniper Post","cost":30,"dmin":28,"dmax":34,"cd":0.6,"range":800,"atk":"pierce","splash":0,"tip":"Second Tech Tower. The Sniper Post has even longer range, and a slightly shorter cooldown. 28-34 damage   Attacks land and air units."},{"id":"hC54","name":"V2 Rocket Launcher","cost":80,"dmin":100,"dmax":130,"cd":1.0,"range":1800,"atk":"pierce","splash":0,"tip":"Alas, Human Tech will never stop. The V2 Rocket launcher has a higher range and far greater damage, but reloading takes time, so the cooldown's a big greater. 100-130 damage   Attacks land units and trees."},{"id":"hC55","name":"Ion Cannon Center","cost":170,"dmin":300,"dmax":375,"cd":3.0,"range":3000,"atk":"normal","splash":0,"tip":"A great addition to any Tech defense, the Ion Cannon Center does a LOT of damage at enormous range. The cooldown, is, of course, greater as well. 300-375 damage +500 damage on impact   Attacks land and air units."},{"id":"hC90","name":"Cruise Missile Launcher","cost":250,"dmin":801,"dmax":900,"cd":4.5,"range":8000,"atk":"pierce","splash":1,"tip":"The Cruise Missile Launcher has a large range, high damage, and a huge splash. It has a long cooldown, however. A good addition to any tech tower lineup."},{"id":"hC59","name":"Nuclear Missile Silo","cost":310,"dmin":902,"dmax":1000,"cd":3.0,"range":1500,"atk":"pierce","splash":1,"tip":"The ultimate in Tech towers, conviently disguised as a simple Orc building. The tower has insane range and very high damage. 902-1000 damage.   Attacks land and air units"}]},{"id":"fire","name":"Forge of Fire","builder":"Fire Minion","color":"#ff7a33","towers":[{"id":"hC02","name":"Flare Tower","cost":10,"dmin":11,"dmax":16,"cd":0.6,"range":700,"atk":"normal","splash":1,"tip":"Light fire tower, does light damage. 3-8 damage, and light splash damage.   Attacks land and air units."},{"id":"oC19","name":"Flame Dancer","cost":45,"dmin":20,"dmax":50,"cd":0.9,"range":700,"atk":"normal","splash":1,"tip":"Medium fire tower. Has greater splash damage and attacks fairly quickly. 20-50 damage.   Attacks land and air units."},{"id":"oC58","name":"Meteor Watcher","cost":95,"dmin":91,"dmax":116,"cd":1.2,"range":900,"atk":"normal","splash":1,"tip":"The third iteration of the Flame line. While the damage is greater, the splash from the meteor is large. 75-100 damage.   Attacks land and air units."},{"id":"oC64","name":"Blast Furnace","cost":200,"dmin":225,"dmax":250,"cd":1.15,"range":700,"atk":"normal","splash":1,"tip":"First, the most noticable difference in the Blast Furnace is the splash damage, it's nearly double the Meteor Watcher. An excellent addition to any defense. 225-250 damage.   Attacks land and air units."},{"id":"hC75","name":"Incinerator","cost":280,"dmin":170,"dmax":170,"cd":0.15,"range":700,"atk":"pierce","splash":0,"tip":"Has an extremely fast attack speed, but the Incinerator lacks something that the rest of Fire has- splash damage. A great tower for any level."},{"id":"oC65","name":"Flame Staff","cost":350,"dmin":101,"dmax":150,"cd":1.0,"range":700,"atk":"normal","splash":0,"tip":"At the height of all the fiery things looms the Flame Staff. It seems to have learned a trick from Electirc Towers, it's very fast, but it has lowish splash and damage. 100-150 damage.   Attacks land and air units."}]},{"id":"ice","name":"Ice Freezer","builder":"Ice Former","color":"#aee6ff","towers":[{"id":"oC24","name":"Icicle Tosser","cost":10,"dmin":13,"dmax":13,"cd":1.0,"range":700,"atk":"normal","splash":1,"tip":"Basic Ice Structure. Decent rate of fire, good minimum damage, slows enemies. 6 damage   Attacks land and air units.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"hC34","name":"Snowball Launcher","cost":40,"dmin":26,"dmax":26,"cd":1.0,"range":700,"atk":"normal","splash":1,"tip":"The next step up in snow defense, the snowball launcher has far higher damage, and fires further. It attacks faster, too. 26 damage   Attacks land and air units.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"oC37","name":"Blizzard Master","cost":100,"dmin":80,"dmax":90,"cd":1.2,"range":700,"atk":"normal","splash":1,"tip":"Ice just improved again. The Blizzard Master is a expensive, but worthwhile investment. 80-90 damage.   Attacks land and air units.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"oC61","name":"Water Sprayer","cost":200,"dmin":50,"dmax":50,"cd":5.0,"range":750,"atk":"normal","splash":0,"tip":"An interesting addition to the Ice tree is the Water Sprayer. It does small amounts of damage and attacks very slow, but it immobilizing the target permanantly. Doesn't work on bosses. 50-50 damage.   Attacks land and air units.","sp":{"immobilize":true}},{"id":"hC99","name":"Cold Exploder","cost":270,"dmin":51,"dmax":150,"cd":2.25,"range":700,"atk":"normal","splash":1,"tip":"The Cold Exploder doesn't do much damage, but it has a huge splash. This splash of cold will slow large amounts of enemies. This tower has a high cooldown period, however. It's a good idea for every ice player to make at least one of these.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"oC62","name":"Nova Creator","cost":350,"dmin":700,"dmax":700,"cd":1.0,"range":775,"atk":"normal","splash":1,"tip":"The final defense for Ice will more than do a good job. While it has no special abilities, it does a large payload of damage. 700-700 damage.   Attacks land and air units."},{"id":"o001","name":"Icey Destroyer","cost":650,"dmin":500,"dmax":514,"cd":0.5,"range":1200,"atk":"chaos","splash":1,"tip":"Out of all the ice towers this is the best. Mass splash. An awesome tower.","sp":{"slow":0.6,"slowDur":2.5}}]},{"id":"gravity","name":"Gravity Generator","builder":"Gravity Lord","color":"#c07aff","towers":[{"id":"hC85","name":"Gravity Source","cost":10,"dmin":8,"dmax":10,"cd":0.95,"range":700,"atk":"normal","splash":0,"tip":"Basic Gravity Tower. The Gravity Source has decent damage, and will do well in the early stages of the game."},{"id":"hC87","name":"Gravity's Pull","cost":50,"dmin":40,"dmax":49,"cd":1.0,"range":400,"atk":"normal","splash":1,"tip":"The next tower of Gravity's defense has the ability to slow enemies. It also does splash damage in a moderate amount. Gravity's Pull posseses a short range, however."},{"id":"hC89","name":"Mind Blaster","cost":150,"dmin":2,"dmax":2,"cd":1.0,"range":700,"atk":"normal","splash":0,"tip":"The Mind Blaster reduces the enemy's HP by 30%. It fairly fast attack and range. A good addition to your Gravity line-up.","sp":{"pctHp":0.3}},{"id":"hC88","name":"Pulsar","cost":280,"dmin":110,"dmax":110,"cd":0.2,"range":700,"atk":"normal","splash":1,"tip":"The Pulsar is a fast attacking tower with decent damage and splash. It is most powerful when used in numbers. This is a must-have for any Gravity player."},{"id":"hC96","name":"Gravity Bomber","cost":280,"dmin":400,"dmax":449,"cd":1.9,"range":800,"atk":"normal","splash":1,"tip":"The Gravity Bomber provides high damage with Critical Strike. It has the longest range out of all Gravity towers, but a long cooldown. Still, it is a good idea to get one of these."},{"id":"hC92","name":"Black Hole","cost":450,"dmin":550,"dmax":550,"cd":2.5,"range":400,"atk":"magic","splash":1,"tip":"The Black Hole attacks a group of units, and does 550 damage to each of them. It has a short range, and a high cooldown however. This is the most powerful tower of Gravity defense.","sp":{"multi":5}}]},{"id":"demon","name":"Demonic Empire","builder":"Demon King","color":"#ff4444","towers":[{"id":"o000","name":"Fire Wolf","cost":15,"dmin":11,"dmax":16,"cd":1.2,"range":700,"atk":"chaos","splash":1,"tip":"Good dammage and range, average speed, decent splash. good for its cost"},{"id":"o003","name":"Demonic Warlock","cost":50,"dmin":46,"dmax":55,"cd":1.5,"range":900,"atk":"chaos","splash":1,"tip":"Very much like the Fire Wolf, but slower, stronger."},{"id":"o004","name":"Posessed AxeMaster","cost":120,"dmin":101,"dmax":115,"cd":1.55,"range":1000,"atk":"chaos","splash":1,"tip":"Alot like the Meteor Watcher, the posessed AxeMaster has good splash. 100 range, 100-115 dammage."},{"id":"o007","name":"Dragon's Lair","cost":225,"dmin":9,"dmax":801,"cd":1.0,"range":1700,"atk":"chaos","splash":1,"tip":"Very Strange Tower indeed.  while it can do 10 dammage, it can also do 800 with splash and at enormous range"},{"id":"o005","name":"Demon Soul","cost":275,"dmin":150,"dmax":348,"cd":1.25,"range":1200,"atk":"chaos","splash":1,"tip":"An great overall tower, has no weakness, but no advantage."},{"id":"o006","name":"Blood Centaur","cost":400,"dmin":500,"dmax":1193,"cd":2.15,"range":1800,"atk":"chaos","splash":1,"tip":"The final demonic tower is worth its cost!  Awesome tower.  All above average stats exept its slow speed.  Awesome tower."}]},{"id":"heaven","name":"Heaven Portal","builder":"Angel","color":"#fff2b0","towers":[{"id":"h003","name":"Holy Guard Tower","cost":10,"dmin":12,"dmax":20,"cd":0.7,"range":400,"atk":"normal","splash":0,"tip":"Good dammage and speed but low range. no splash and fast build."},{"id":"h004","name":"Heaven Guard","cost":40,"dmin":56,"dmax":75,"cd":1.1,"range":800,"atk":"normal","splash":0,"tip":"The second heaven tower is slower than the previous.  however, the range and dammage are way better and it has critical strike."},{"id":"h006","name":"Gate Keeper","cost":135,"dmin":2,"dmax":2,"cd":3.25,"range":650,"atk":"normal","splash":0,"tip":"The Gate Keeper is very special.  it has no dammage at all, but permanantely reduces the speed of all enemies around it.  Works on Duke. A must-have.","sp":{"auraSlow":0.4,"permanent":true}},{"id":"h005","name":"Saint Spirit","cost":200,"dmin":250,"dmax":300,"cd":1.6,"range":850,"atk":"chaos","splash":1,"tip":"The 4th tower of heaven is the only one that has - still small- splash.  high dammage, average speed and range.  A great tower."},{"id":"h007","name":"Archangel","cost":280,"dmin":100,"dmax":298,"cd":0.17,"range":500,"atk":"magic","splash":0,"tip":"Very fast tower. pretty high dammage, small range, no splash.  A very useful tower for any level."},{"id":"h008","name":"God","cost":500,"dmin":300,"dmax":650,"cd":0.3,"range":900,"atk":"chaos","splash":0,"tip":"An awesome mid-game tower. A great addition to your Heaven defense."},{"id":"eC93","name":"Satan","cost":666,"dmin":701,"dmax":899,"cd":1.0,"range":1000,"atk":"chaos","splash":0,"tip":"The ultimate tower of Heaven defense. Satan has high damage, super speed, and great range. God has nothing on this tower."}]},{"id":"space","name":"Space Station","builder":"Meteor","color":"#8ab4ff","towers":[{"id":"o008","name":"Space Ship","cost":20,"dmin":12,"dmax":22,"cd":1.35,"range":750,"atk":"chaos","splash":1,"tip":"The Space Ship has average everything, even splash.  Its expensive, but worth it!"},{"id":"o009","name":"Galactic Beam","cost":65,"dmin":25,"dmax":49,"cd":1.05,"range":650,"atk":"chaos","splash":1,"tip":"The second spacial tower has HUGE splash, good speed. resonable range and dammage."},{"id":"o00A","name":"Planetary Machine Gun","cost":140,"dmin":40,"dmax":79,"cd":0.2,"range":1200,"atk":"normal","splash":0,"tip":"Very like the Scorcher in Zoator, it has very,very fast attack.  It has long range, and good dammage. No splash.  Expensive!"},{"id":"o00B","name":"Star Blaster","cost":275,"dmin":400,"dmax":600,"cd":2.5,"range":3500,"atk":"chaos","splash":1,"tip":"Incredible range, great dammage, good splash, slow speed.  What else can you wish for? This is the Star Blaster."},{"id":"o00C","name":"Insane Gravity","cost":400,"dmin":1,"dmax":1,"cd":3.5,"range":500,"atk":"normal","splash":0,"tip":"Awesome tower.  The Insane Gravity casts slow AND reduces the hp of anything that comes near it by 25%.  only slow works on Duke.","sp":{"auraPct":0.25,"auraSlow":0.5}},{"id":"o00D","name":"The Void","cost":700,"dmin":1,"dmax":1,"cd":5.0,"range":200,"atk":"normal","splash":0,"tip":"The best tower in the game: The Void.  it kills anything that comes near it(except Duke).  for Duke, it takes away 5% of his life.  The price is outrageous,however.","sp":{"voidKill":true,"bossPct":0.05}}]}],"waves":[{"level":1,"name":"Scout","hp":19,"amount":20,"ms":200,"armor":0,"atype":"normal","bounty":3,"boss":false},{"level":2,"name":"Engineer","hp":60,"amount":20,"ms":230,"armor":0,"atype":"normal","bounty":6,"boss":false},{"level":3,"name":"Night Ranger","hp":113,"amount":20,"ms":260,"armor":2,"atype":"normal","bounty":9,"boss":false},{"level":4,"name":"Barbarian","hp":160,"amount":20,"ms":270,"armor":0,"atype":"normal","bounty":10,"boss":false},{"level":5,"name":"Baby Dragon","hp":110,"amount":15,"ms":270,"armor":0,"atype":"normal","bounty":8,"boss":false},{"level":6,"name":"Stalker","hp":265,"amount":20,"ms":280,"armor":3,"atype":"small","bounty":13,"boss":false},{"level":7,"name":"Water Runner","hp":325,"amount":20,"ms":280,"armor":4,"atype":"normal","bounty":14,"boss":false},{"level":8,"name":"Ice Troll","hp":375,"amount":20,"ms":300,"armor":5,"atype":"normal","bounty":15,"boss":false},{"level":9,"name":"Wolf Rider","hp":400,"amount":20,"ms":320,"armor":7,"atype":"normal","bounty":16,"boss":false},{"level":10,"name":"Hovercraft","hp":450,"amount":20,"ms":315,"armor":7,"atype":"fort","bounty":17,"boss":false},{"level":11,"name":"Goblin Machine","hp":625,"amount":20,"ms":300,"armor":8,"atype":"normal","bounty":20,"boss":false},{"level":12,"name":"Frosty Reptile","hp":782,"amount":20,"ms":375,"armor":10,"atype":"normal","bounty":22,"boss":false},{"level":13,"name":"Demonic Pet","hp":900,"amount":20,"ms":270,"armor":10,"atype":"small","bounty":24,"boss":false},{"level":14,"name":"Matured Dragon","hp":725,"amount":15,"ms":325,"armor":12,"atype":"normal","bounty":22,"boss":false},{"level":15,"name":"Ice Shard Golem","hp":1375,"amount":20,"ms":350,"armor":12,"atype":"normal","bounty":30,"boss":false},{"level":16,"name":"Eternal Spirit","hp":1300,"amount":20,"ms":370,"armor":14,"atype":"normal","bounty":29,"boss":false},{"level":17,"name":"Supply Tank","hp":1525,"amount":20,"ms":360,"armor":10,"atype":"normal","bounty":31,"boss":false},{"level":18,"name":"Walking Corpse","hp":2125,"amount":20,"ms":360,"armor":10,"atype":"normal","bounty":37,"boss":false},{"level":19,"name":"Totem Carrier","hp":2500,"amount":20,"ms":380,"armor":15,"atype":"normal","bounty":40,"boss":false},{"level":20,"name":"Unholy Knight","hp":2875,"amount":20,"ms":400,"armor":15,"atype":"normal","bounty":43,"boss":false},{"level":21,"name":"Crystal Mage","hp":3125,"amount":20,"ms":350,"armor":16,"atype":"small","bounty":45,"boss":false},{"level":22,"name":"Frozen Infernal","hp":3625,"amount":20,"ms":375,"armor":17,"atype":"normal","bounty":48,"boss":false},{"level":23,"name":"Adult Dragon","hp":3000,"amount":15,"ms":400,"armor":20,"atype":"normal","bounty":44,"boss":false},{"level":24,"name":"Polar Bear","hp":4250,"amount":20,"ms":385,"armor":18,"atype":"normal","bounty":52,"boss":false},{"level":25,"name":"Possessed Hunter","hp":5000,"amount":20,"ms":400,"armor":18,"atype":"normal","bounty":57,"boss":false},{"level":26,"name":"Corrupt Cheiftain","hp":5625,"amount":20,"ms":400,"armor":19,"atype":"normal","bounty":60,"boss":false},{"level":27,"name":"Ancient Dragon","hp":5250,"amount":15,"ms":425,"armor":19,"atype":"normal","bounty":58,"boss":false},{"level":28,"name":"Spider Fiend","hp":7500,"amount":20,"ms":400,"armor":20,"atype":"normal","bounty":69,"boss":false},{"level":29,"name":"Armored Wisp","hp":8200,"amount":20,"ms":400,"armor":20,"atype":"normal","bounty":72,"boss":false},{"level":30,"name":"Duke-Wintermaul","hp":70000,"amount":1,"ms":400,"armor":15,"atype":"normal","bounty":212,"boss":true},{"level":31,"name":"Jon Cowan","hp":7000,"amount":20,"ms":400,"armor":15,"atype":"normal","bounty":67,"boss":false},{"level":32,"name":"Sparta606","hp":8000,"amount":20,"ms":450,"armor":20,"atype":"normal","bounty":72,"boss":false},{"level":33,"name":"DEMON SHEEP","hp":1000,"amount":50,"ms":500,"armor":20,"atype":"divine","bounty":100,"boss":false}]};
+const GAME_DATA = {"meta":{"name":"Wintermaul TD X10","lives":20,"gold":60,"waveGap":30,"firstGap":40,"bonusBase":10,"bonusInc":2,"sell":0.75},"races":[{"id":"crystal","name":"Crystal Castle","builder":"Crystal Molder","color":"#7ec8ff","towers":[{"id":"hgtw","name":"Crystal Shooter","cost":10,"dmin":10,"dmax":13,"cd":0.9,"range":750,"atk":"chaos","splash":0,"tip":"Basic tower of the crystal defense. The Crystal Shooter has relatively high chaos damage for its cost."},{"id":"hctw","name":"Crystal Blaster","cost":50,"dmin":41,"dmax":41,"cd":1.0,"range":700,"atk":"chaos","splash":1,"tip":"The second tower of crystal defense. Does much higher damage than the Shooter, and also deals splash damage."},{"id":"hwtw","name":"Crystal Fury","cost":175,"dmin":101,"dmax":120,"cd":0.25,"range":700,"atk":"chaos","splash":0,"tip":"The Crystal Fury is a fast attacking tower with high damage and critical strike. One of the deadliest towers of crystal defense."},{"id":"hhou","name":"Crystal Slower","cost":250,"dmin":271,"dmax":295,"cd":0.9,"range":800,"atk":"chaos","splash":1,"tip":"The Crystal Slower is one of the best slowing towers in the game. It deals splash damage and slows the enemies. It costs quite a bit, however.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"oC91","name":"Crystal Buster","cost":500,"dmin":750,"dmax":750,"cd":1.2,"range":900,"atk":"chaos","splash":1,"tip":"The Crystal Buster is like the Blaster. Th Buster, however, has a larger range, higher damage, and a greater splash. It's quite expensive, though."},{"id":"e000","name":"Crystal Dissolver","cost":750,"dmin":401,"dmax":599,"cd":0.15,"range":700,"atk":"chaos","splash":0,"tip":"This tower is very good but not as good as the Impaler. The Crystal Dissolver has a long range, high damage, and fast speed. It is expensive, but it's worth it."},{"id":"hatw","name":"Crystal Impaler","cost":1000,"dmin":500,"dmax":534,"cd":0.15,"range":1200,"atk":"chaos","splash":1,"tip":"Who needs a Dissolver when you have an Impaler!  This tower has the best splash of any tower EVER!!!!! Even if the damage isnt great it RULES!!!!!"}]},{"id":"aqua","name":"Aqua Lake","builder":"Aqua Summoner","color":"#3aa0ff","towers":[{"id":"h009","name":"Aqua Splasher","cost":15,"dmin":21,"dmax":24,"cd":0.4,"range":700,"atk":"normal","splash":1,"tip":"Basic tower of the Aqua Defense. It not the best tower but it gets the job done."},{"id":"h00A","name":"Aqua Caster","cost":45,"dmin":55,"dmax":58,"cd":0.5,"range":700,"atk":"magic","splash":1,"tip":"This Second tower of Aqua Lake is pretty good its has everything u need."},{"id":"h00B","name":"Aqua Cannon","cost":200,"dmin":149,"dmax":164,"cd":0.15,"range":850,"atk":"chaos","splash":1,"tip":"This is the Third Tower for your Aqua Defence. It has Good Damge,and Good Splash. what more could u want"},{"id":"h00D","name":"Aqua Guard","cost":300,"dmin":231,"dmax":234,"cd":0.4,"range":1000,"atk":"normal","splash":1,"tip":"This is the Fourth tower of Aqua Lake. This is one of the only good air towers in Aqua."},{"id":"h00C","name":"Aqua Lord","cost":450,"dmin":400,"dmax":414,"cd":0.3,"range":1200,"atk":"chaos","splash":1,"tip":"Good all around tower."},{"id":"h00E","name":"H2O","cost":800,"dmin":500,"dmax":514,"cd":0.15,"range":1500,"atk":"magic","splash":1,"tip":"This is the Final tower of your Aqua Defence. Great Splash, Range , and Damage."}]},{"id":"nature","name":"Earth Gate","builder":"Gaia's Servant","color":"#4cc94c","towers":[{"id":"emow","name":"Nature Pool","cost":10,"dmin":11,"dmax":14,"cd":1.0,"range":700,"atk":"pierce","splash":1,"tip":"Light earth tower, does 3-6, and some splash damage.   Attacks land and air units."},{"id":"hC80","name":"Terran Protector","cost":40,"dmin":38,"dmax":47,"cd":1.0,"range":700,"atk":"normal","splash":1,"tip":"Heavy earth tower, does medium damage. 31-38 damage, and splash damage.   Attacks land and air units."},{"id":"hC82","name":"Gaia's Box","cost":100,"dmin":76,"dmax":100,"cd":1.5,"range":700,"atk":"normal","splash":1,"tip":"Little is known of this box.  A gift from gaia, it has huge splash and magical damage.   Attacks land and air units."},{"id":"hC86","name":"Earth's Soul","cost":200,"dmin":361,"dmax":460,"cd":1.2,"range":700,"atk":"siege","splash":1,"tip":"The Earth's Soul does relatively high damage, and has a large splash. It has a tolerable cooldown time, and will make a good addition to your Earth lineup."},{"id":"eC83","name":"Gaia","cost":350,"dmin":400,"dmax":450,"cd":1.0,"range":750,"atk":"siege","splash":1,"tip":"A spitting image of Gaia with strength to match.   Attacks land and air units."},{"id":"e002","name":"Blaze","cost":800,"dmin":500,"dmax":550,"cd":1.0,"range":1250,"atk":"pierce","splash":1,"tip":"The highest tower in earth's defense. Fires a flaming arrow that has great splash, and \"blazing\" speed. Goodbye birdy!   Attacks land and air units."}]},{"id":"stone","name":"Stone Sanctuary","builder":"Stone Summoner","color":"#b0a08a","towers":[{"id":"oC14","name":"Pebble Tower","cost":10,"dmin":12,"dmax":20,"cd":0.5,"range":600,"atk":"siege","splash":1,"tip":"Beginning Stone Tower. Moderate splash damage.    Attacks land and air units."},{"id":"oC35","name":"Rock Blaster","cost":40,"dmin":31,"dmax":55,"cd":1.1,"range":450,"atk":"siege","splash":1,"tip":"Next in the Stone line is the Rock Blaster. This structure has higher damage and range, but attacks a tiny bit slower.   Attacks land and air units."},{"id":"hC53","name":"Stone Projector","cost":120,"dmin":111,"dmax":171,"cd":0.5,"range":700,"atk":"siege","splash":0,"tip":"One step for Stone, one giant leap for defense. The Stone Projector attacks a little slower, but it's damage is far higher.   Attacks land and air units."},{"id":"oC26","name":"Faerie Mage","cost":200,"dmin":311,"dmax":386,"cd":1.1,"range":500,"atk":"siege","splash":0,"tip":"This Stone Tower is a welome addition to the stone line. This tower reduces the armor of the attacked unit by 5 and does formitable damage on it's own.    Attacks land and air units.","sp":{"shred":5}},{"id":"hC97","name":"Stone Destroyer","cost":285,"dmin":351,"dmax":450,"cd":0.5,"range":1000,"atk":"siege","splash":0,"tip":"Good tower with some splash ability. Good damage, and decent cooldown speed."},{"id":"oC67","name":"Paralyzer","cost":350,"dmin":25,"dmax":25,"cd":7.5,"range":500,"atk":"siege","splash":0,"tip":"At first sight, the Paralyzer looks like one of those crappy towers. It doesn't kill units, but rather leaves them with ten hit points. Doesn't work on bosses. 1-1 damage +Leaves target with 10 hp   Attacks land and air units.","sp":{"leave10":true}},{"id":"h00F","name":"Rock Crusher","cost":650,"dmin":500,"dmax":599,"cd":0.15,"range":1200,"atk":"chaos","splash":1,"tip":"The ultimate Stone tower. Simply awesome."}]},{"id":"power","name":"Power Plant","builder":"Spark","color":"#ffe14c","towers":[{"id":"hC11","name":"Shock Tower","cost":10,"dmin":7,"dmax":7,"cd":0.6,"range":600,"atk":"normal","splash":0,"tip":"Light electric tower. Does light damage in moderate range. Attacks extremely fast. 4 damage.   Attacks land and air units."},{"id":"oC18","name":"Storm Caller","cost":40,"dmin":30,"dmax":30,"cd":0.8,"range":500,"atk":"normal","splash":0,"tip":"The Storm Caller is a large advance in the Electric line. It's damage is much higher, but it's range slightly lower. 30 damage.   Attacks land and air units."},{"id":"hC36","name":"Chain Lightning Caster","cost":100,"dmin":1,"dmax":1,"cd":2.0,"range":250,"atk":"normal","splash":0,"tip":"This may not do much physical damage, but it nails many enemies with it's chain lightning attack. Very short range and medium cooldown. 1 standard damage + Chain Lightning   Attacks land and air units.","sp":{"chain":6}},{"id":"oC60","name":"Thunder Rod","cost":200,"dmin":1,"dmax":1,"cd":2.0,"range":350,"atk":"normal","splash":0,"tip":"A truly helpful Tower for any situation, the Thunder Rod does basically no base damage. It removes 25% of any opponents current health. Doesn't work on bosses. 1-1 damage +25% enemy hp   Attacks land and air units.","sp":{"pctHp":0.25}},{"id":"hC32","name":"Sparkler","cost":285,"dmin":300,"dmax":349,"cd":0.4,"range":700,"atk":"normal","splash":0,"tip":"A special tower that has two separate attacks- one for ground and one for air. This is a very effective tower and one of the most well-rounded towers in the game."},{"id":"oC68","name":"Battery","cost":350,"dmin":280,"dmax":380,"cd":0.55,"range":700,"atk":"normal","splash":0,"tip":"A good mid-game tower. Good damage and speed."},{"id":"o00E","name":"Volt","cost":675,"dmin":500,"dmax":514,"cd":0.15,"range":1100,"atk":"chaos","splash":1,"tip":"The last in the line of Electricity. Has great damge,and speed. Just an awesome tower.   Attacks land and air units."}]},{"id":"tech","name":"Tech Center","builder":"Scientist","color":"#c0c8d0","towers":[{"id":"hC66","name":"Enhanced Arrow Tower","cost":7,"dmin":3,"dmax":3,"cd":1.0,"range":700,"atk":"normal","splash":0,"tip":"Light technology tower. Has a long range and decent damage. 3-7 damage.   Attacks land and air units."},{"id":"hC08","name":"Sniper Post","cost":30,"dmin":28,"dmax":34,"cd":0.6,"range":800,"atk":"pierce","splash":0,"tip":"Second Tech Tower. The Sniper Post has even longer range, and a slightly shorter cooldown. 28-34 damage   Attacks land and air units."},{"id":"hC54","name":"V2 Rocket Launcher","cost":80,"dmin":100,"dmax":130,"cd":1.0,"range":1800,"atk":"pierce","splash":0,"tip":"Alas, Human Tech will never stop. The V2 Rocket launcher has a higher range and far greater damage, but reloading takes time, so the cooldown's a big greater. 100-130 damage   Attacks land units and trees."},{"id":"hC55","name":"Ion Cannon Center","cost":170,"dmin":300,"dmax":375,"cd":3.0,"range":3000,"atk":"normal","splash":0,"tip":"A great addition to any Tech defense, the Ion Cannon Center does a LOT of damage at enormous range. The cooldown, is, of course, greater as well. 300-375 damage +500 damage on impact   Attacks land and air units."},{"id":"hC90","name":"Cruise Missile Launcher","cost":250,"dmin":801,"dmax":900,"cd":4.5,"range":8000,"atk":"pierce","splash":1,"tip":"The Cruise Missile Launcher has a large range, high damage, and a huge splash. It has a long cooldown, however. A good addition to any tech tower lineup."},{"id":"hC59","name":"Nuclear Missile Silo","cost":310,"dmin":902,"dmax":1000,"cd":3.0,"range":1500,"atk":"pierce","splash":1,"tip":"The ultimate in Tech towers, conviently disguised as a simple Orc building. The tower has insane range and very high damage. 902-1000 damage.   Attacks land and air units"}]},{"id":"fire","name":"Forge of Fire","builder":"Fire Minion","color":"#ff7a33","towers":[{"id":"hC02","name":"Flare Tower","cost":10,"dmin":11,"dmax":16,"cd":0.6,"range":700,"atk":"normal","splash":1,"tip":"Light fire tower, does light damage. 3-8 damage, and light splash damage.   Attacks land and air units."},{"id":"oC19","name":"Flame Dancer","cost":45,"dmin":20,"dmax":50,"cd":0.9,"range":700,"atk":"normal","splash":1,"tip":"Medium fire tower. Has greater splash damage and attacks fairly quickly. 20-50 damage.   Attacks land and air units."},{"id":"oC58","name":"Meteor Watcher","cost":95,"dmin":91,"dmax":116,"cd":1.2,"range":900,"atk":"normal","splash":1,"tip":"The third iteration of the Flame line. While the damage is greater, the splash from the meteor is large. 75-100 damage.   Attacks land and air units."},{"id":"oC64","name":"Blast Furnace","cost":200,"dmin":225,"dmax":250,"cd":1.15,"range":700,"atk":"normal","splash":1,"tip":"First, the most noticable difference in the Blast Furnace is the splash damage, it's nearly double the Meteor Watcher. An excellent addition to any defense. 225-250 damage.   Attacks land and air units."},{"id":"hC75","name":"Incinerator","cost":280,"dmin":170,"dmax":170,"cd":0.15,"range":700,"atk":"pierce","splash":0,"tip":"Has an extremely fast attack speed, but the Incinerator lacks something that the rest of Fire has- splash damage. A great tower for any level."},{"id":"oC65","name":"Flame Staff","cost":350,"dmin":101,"dmax":150,"cd":1.0,"range":700,"atk":"normal","splash":0,"tip":"At the height of all the fiery things looms the Flame Staff. It seems to have learned a trick from Electirc Towers, it's very fast, but it has lowish splash and damage. 100-150 damage.   Attacks land and air units."}]},{"id":"ice","name":"Ice Freezer","builder":"Ice Former","color":"#aee6ff","towers":[{"id":"oC24","name":"Icicle Tosser","cost":10,"dmin":13,"dmax":13,"cd":1.0,"range":700,"atk":"normal","splash":1,"tip":"Basic Ice Structure. Decent rate of fire, good minimum damage, slows enemies. 6 damage   Attacks land and air units.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"hC34","name":"Snowball Launcher","cost":40,"dmin":26,"dmax":26,"cd":1.0,"range":700,"atk":"normal","splash":1,"tip":"The next step up in snow defense, the snowball launcher has far higher damage, and fires further. It attacks faster, too. 26 damage   Attacks land and air units.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"oC37","name":"Blizzard Master","cost":100,"dmin":80,"dmax":90,"cd":1.2,"range":700,"atk":"normal","splash":1,"tip":"Ice just improved again. The Blizzard Master is a expensive, but worthwhile investment. 80-90 damage.   Attacks land and air units.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"oC61","name":"Water Sprayer","cost":200,"dmin":50,"dmax":50,"cd":5.0,"range":750,"atk":"normal","splash":0,"tip":"An interesting addition to the Ice tree is the Water Sprayer. It does small amounts of damage and attacks very slow, but it immobilizing the target permanantly. Doesn't work on bosses. 50-50 damage.   Attacks land and air units.","sp":{"immobilize":true}},{"id":"hC99","name":"Cold Exploder","cost":270,"dmin":51,"dmax":150,"cd":2.25,"range":700,"atk":"normal","splash":1,"tip":"The Cold Exploder doesn't do much damage, but it has a huge splash. This splash of cold will slow large amounts of enemies. This tower has a high cooldown period, however. It's a good idea for every ice player to make at least one of these.","sp":{"slow":0.6,"slowDur":2.5}},{"id":"oC62","name":"Nova Creator","cost":350,"dmin":700,"dmax":700,"cd":1.0,"range":775,"atk":"normal","splash":1,"tip":"The final defense for Ice will more than do a good job. While it has no special abilities, it does a large payload of damage. 700-700 damage.   Attacks land and air units."},{"id":"o001","name":"Icey Destroyer","cost":650,"dmin":500,"dmax":514,"cd":0.5,"range":1200,"atk":"chaos","splash":1,"tip":"Out of all the ice towers this is the best. Mass splash. An awesome tower.","sp":{"slow":0.6,"slowDur":2.5}}]},{"id":"gravity","name":"Gravity Generator","builder":"Gravity Lord","color":"#c07aff","towers":[{"id":"hC85","name":"Gravity Source","cost":10,"dmin":8,"dmax":10,"cd":0.95,"range":700,"atk":"normal","splash":0,"tip":"Basic Gravity Tower. The Gravity Source has decent damage, and will do well in the early stages of the game."},{"id":"hC87","name":"Gravity's Pull","cost":50,"dmin":40,"dmax":49,"cd":1.0,"range":400,"atk":"normal","splash":1,"tip":"The next tower of Gravity's defense has the ability to slow enemies. It also does splash damage in a moderate amount. Gravity's Pull posseses a short range, however."},{"id":"hC89","name":"Mind Blaster","cost":150,"dmin":2,"dmax":2,"cd":1.0,"range":700,"atk":"normal","splash":0,"tip":"The Mind Blaster reduces the enemy's HP by 30%. It fairly fast attack and range. A good addition to your Gravity line-up.","sp":{"pctHp":0.3}},{"id":"hC88","name":"Pulsar","cost":280,"dmin":110,"dmax":110,"cd":0.2,"range":700,"atk":"normal","splash":1,"tip":"The Pulsar is a fast attacking tower with decent damage and splash. It is most powerful when used in numbers. This is a must-have for any Gravity player."},{"id":"hC96","name":"Gravity Bomber","cost":280,"dmin":400,"dmax":449,"cd":1.9,"range":800,"atk":"normal","splash":1,"tip":"The Gravity Bomber provides high damage with Critical Strike. It has the longest range out of all Gravity towers, but a long cooldown. Still, it is a good idea to get one of these."},{"id":"hC92","name":"Black Hole","cost":450,"dmin":550,"dmax":550,"cd":2.5,"range":400,"atk":"magic","splash":1,"tip":"The Black Hole attacks a group of units, and does 550 damage to each of them. It has a short range, and a high cooldown however. This is the most powerful tower of Gravity defense.","sp":{"multi":5}}]},{"id":"demon","name":"Demonic Empire","builder":"Demon King","color":"#ff4444","towers":[{"id":"o000","name":"Fire Wolf","cost":15,"dmin":11,"dmax":16,"cd":1.2,"range":700,"atk":"chaos","splash":1,"tip":"Good dammage and range, average speed, decent splash. good for its cost"},{"id":"o003","name":"Demonic Warlock","cost":50,"dmin":46,"dmax":55,"cd":1.5,"range":900,"atk":"chaos","splash":1,"tip":"Very much like the Fire Wolf, but slower, stronger."},{"id":"o004","name":"Posessed AxeMaster","cost":120,"dmin":101,"dmax":115,"cd":1.55,"range":1000,"atk":"chaos","splash":1,"tip":"Alot like the Meteor Watcher, the posessed AxeMaster has good splash. 100 range, 100-115 dammage."},{"id":"o007","name":"Dragon's Lair","cost":225,"dmin":9,"dmax":801,"cd":1.0,"range":1700,"atk":"chaos","splash":1,"tip":"Very Strange Tower indeed.  while it can do 10 dammage, it can also do 800 with splash and at enormous range"},{"id":"o005","name":"Demon Soul","cost":275,"dmin":150,"dmax":348,"cd":1.25,"range":1200,"atk":"chaos","splash":1,"tip":"An great overall tower, has no weakness, but no advantage."},{"id":"o006","name":"Blood Centaur","cost":400,"dmin":500,"dmax":1193,"cd":2.15,"range":1800,"atk":"chaos","splash":1,"tip":"The final demonic tower is worth its cost!  Awesome tower.  All above average stats exept its slow speed.  Awesome tower."}]},{"id":"heaven","name":"Heaven Portal","builder":"Angel","color":"#fff2b0","towers":[{"id":"h003","name":"Holy Guard Tower","cost":10,"dmin":12,"dmax":20,"cd":0.7,"range":400,"atk":"normal","splash":0,"tip":"Good dammage and speed but low range. no splash and fast build."},{"id":"h004","name":"Heaven Guard","cost":40,"dmin":56,"dmax":75,"cd":1.1,"range":800,"atk":"normal","splash":0,"tip":"The second heaven tower is slower than the previous.  however, the range and dammage are way better and it has critical strike."},{"id":"h006","name":"Gate Keeper","cost":135,"dmin":2,"dmax":2,"cd":3.25,"range":650,"atk":"normal","splash":0,"tip":"The Gate Keeper is very special.  it has no dammage at all, but permanantely reduces the speed of all enemies around it.  Works on Duke. A must-have.","sp":{"auraSlow":0.4,"permanent":true}},{"id":"h005","name":"Saint Spirit","cost":200,"dmin":250,"dmax":300,"cd":1.6,"range":850,"atk":"chaos","splash":1,"tip":"The 4th tower of heaven is the only one that has - still small- splash.  high dammage, average speed and range.  A great tower."},{"id":"h007","name":"Archangel","cost":280,"dmin":100,"dmax":298,"cd":0.17,"range":500,"atk":"magic","splash":0,"tip":"Very fast tower. pretty high dammage, small range, no splash.  A very useful tower for any level."},{"id":"h008","name":"God","cost":500,"dmin":300,"dmax":650,"cd":0.3,"range":900,"atk":"chaos","splash":0,"tip":"An awesome mid-game tower. A great addition to your Heaven defense."},{"id":"eC93","name":"Satan","cost":666,"dmin":701,"dmax":899,"cd":1.0,"range":1000,"atk":"chaos","splash":0,"tip":"The ultimate tower of Heaven defense. Satan has high damage, super speed, and great range. God has nothing on this tower."}]},{"id":"space","name":"Space Station","builder":"Meteor","color":"#8ab4ff","towers":[{"id":"o008","name":"Space Ship","cost":20,"dmin":12,"dmax":22,"cd":1.35,"range":750,"atk":"chaos","splash":1,"tip":"The Space Ship has average everything, even splash.  Its expensive, but worth it!"},{"id":"o009","name":"Galactic Beam","cost":65,"dmin":25,"dmax":49,"cd":1.05,"range":650,"atk":"chaos","splash":1,"tip":"The second spacial tower has HUGE splash, good speed. resonable range and dammage."},{"id":"o00A","name":"Planetary Machine Gun","cost":140,"dmin":40,"dmax":79,"cd":0.2,"range":1200,"atk":"normal","splash":0,"tip":"Very like the Scorcher in Zoator, it has very,very fast attack.  It has long range, and good dammage. No splash.  Expensive!"},{"id":"o00B","name":"Star Blaster","cost":275,"dmin":400,"dmax":600,"cd":2.5,"range":3500,"atk":"chaos","splash":1,"tip":"Incredible range, great dammage, good splash, slow speed.  What else can you wish for? This is the Star Blaster."},{"id":"o00C","name":"Insane Gravity","cost":400,"dmin":1,"dmax":1,"cd":3.5,"range":500,"atk":"normal","splash":0,"tip":"Awesome tower.  The Insane Gravity casts slow AND reduces the hp of anything that comes near it by 25%.  only slow works on Duke.","sp":{"auraPct":0.25,"auraSlow":0.5}},{"id":"o00D","name":"The Void","cost":700,"dmin":1,"dmax":1,"cd":5.0,"range":200,"atk":"normal","splash":0,"tip":"The best tower in the game: The Void.  it kills anything that comes near it(except Duke).  for Duke, it takes away 5% of his life.  The price is outrageous,however.","sp":{"voidKill":true,"bossPct":0.05}}]}],"waves":[{"level":1,"name":"Scout","hp":19,"amount":20,"ms":200,"armor":0,"atype":"normal","bounty":3,"boss":false},{"level":2,"name":"Engineer","hp":60,"amount":20,"ms":230,"armor":0,"atype":"normal","bounty":6,"boss":false},{"level":3,"name":"Night Ranger","hp":113,"amount":20,"ms":260,"armor":2,"atype":"normal","bounty":9,"boss":false},{"level":4,"name":"Barbarian","hp":160,"amount":20,"ms":270,"armor":0,"atype":"normal","bounty":10,"boss":false},{"level":5,"name":"Baby Dragon","hp":110,"amount":15,"ms":270,"armor":0,"atype":"normal","bounty":8,"boss":false},{"level":6,"name":"Stalker","hp":265,"amount":20,"ms":280,"armor":3,"atype":"small","bounty":13,"boss":false},{"level":7,"name":"Water Runner","hp":325,"amount":20,"ms":280,"armor":4,"atype":"normal","bounty":14,"boss":false},{"level":8,"name":"Ice Troll","hp":375,"amount":20,"ms":300,"armor":5,"atype":"normal","bounty":15,"boss":false},{"level":9,"name":"Wolf Rider","hp":400,"amount":20,"ms":320,"armor":7,"atype":"normal","bounty":16,"boss":false},{"level":10,"name":"Hovercraft","hp":450,"amount":20,"ms":315,"armor":7,"atype":"fort","bounty":17,"boss":false},{"level":11,"name":"Goblin Machine","hp":625,"amount":20,"ms":300,"armor":8,"atype":"normal","bounty":20,"boss":false},{"level":12,"name":"Frosty Reptile","hp":782,"amount":20,"ms":375,"armor":10,"atype":"normal","bounty":22,"boss":false},{"level":13,"name":"Demonic Pet","hp":900,"amount":20,"ms":270,"armor":10,"atype":"small","bounty":24,"boss":false},{"level":14,"name":"Matured Dragon","hp":725,"amount":15,"ms":325,"armor":12,"atype":"normal","bounty":22,"boss":false},{"level":15,"name":"Ice Shard Golem","hp":1375,"amount":20,"ms":350,"armor":12,"atype":"normal","bounty":30,"boss":false},{"level":16,"name":"Eternal Spirit","hp":1300,"amount":20,"ms":370,"armor":14,"atype":"normal","bounty":29,"boss":false},{"level":17,"name":"Supply Tank","hp":1525,"amount":20,"ms":360,"armor":10,"atype":"normal","bounty":31,"boss":false},{"level":18,"name":"Walking Corpse","hp":2125,"amount":20,"ms":360,"armor":10,"atype":"normal","bounty":37,"boss":false},{"level":19,"name":"Totem Carrier","hp":2500,"amount":20,"ms":380,"armor":15,"atype":"normal","bounty":40,"boss":false},{"level":20,"name":"Unholy Knight","hp":2875,"amount":20,"ms":400,"armor":15,"atype":"normal","bounty":43,"boss":false},{"level":21,"name":"Crystal Mage","hp":3125,"amount":20,"ms":350,"armor":16,"atype":"small","bounty":45,"boss":false},{"level":22,"name":"Frozen Infernal","hp":3625,"amount":20,"ms":375,"armor":17,"atype":"normal","bounty":48,"boss":false},{"level":23,"name":"Adult Dragon","hp":3000,"amount":15,"ms":400,"armor":20,"atype":"normal","bounty":44,"boss":false},{"level":24,"name":"Polar Bear","hp":4250,"amount":20,"ms":385,"armor":18,"atype":"normal","bounty":52,"boss":false},{"level":25,"name":"Possessed Hunter","hp":5000,"amount":20,"ms":400,"armor":18,"atype":"normal","bounty":57,"boss":false},{"level":26,"name":"Corrupt Cheiftain","hp":5625,"amount":20,"ms":400,"armor":19,"atype":"normal","bounty":60,"boss":false},{"level":27,"name":"Ancient Dragon","hp":5250,"amount":15,"ms":425,"armor":19,"atype":"normal","bounty":58,"boss":false},{"level":28,"name":"Spider Fiend","hp":7500,"amount":20,"ms":400,"armor":20,"atype":"normal","bounty":69,"boss":false},{"level":29,"name":"Armored Wisp","hp":8200,"amount":20,"ms":400,"armor":20,"atype":"normal","bounty":72,"boss":false},{"level":30,"name":"Duke-Wintermaul","hp":70000,"amount":1,"ms":400,"armor":15,"atype":"normal","bounty":212,"boss":true},{"level":31,"name":"Jon Cowan","hp":7000,"amount":20,"ms":400,"armor":15,"atype":"normal","bounty":67,"boss":false},{"level":32,"name":"Sparta606","hp":8000,"amount":20,"ms":450,"armor":20,"atype":"normal","bounty":72,"boss":false},{"level":33,"name":"DEMON SHEEP","hp":1000,"amount":50,"ms":500,"armor":20,"atype":"divine","bounty":100,"boss":false}]};
+const MAP = {"W":192,"H":192,"TW":97,"TH":97,"pack":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFVpUFVVVVUFaVVQVVUFVWlQVVVVVQVpVVBVVVVVBVVpYFVVVVUFaVUAAAAAAAAAAFVpUFVVVVUFaVVQVVUFVWlQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAFVpUFVVVVUFaVVQVVUFVWlQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAJVqUFVVVVUFalVQVVUFVWlQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAJVqUFVVVVUFalVQVVUFVWlQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAFVpUFVVVVUFalVQVVUFValQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAFVpUFVVVVUFalVQVVUFValQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAJVqUFVVVVUFalVQVVUFVWlQVVVVVQVqVVBVVVVVBVVpUFVVVVUFaVUAAAAAAAAAAJVqUFVVVVUFalVQVVUFVWlQVVVVVQVqVVBVVVVVBVVpUFVVVVUFaVUAAAAAAAAAAFWpUFVVVVUFaVVQVVUFVWlQVVVVVQVqVVBVVVVVBVVpUFVVVVUFaVUAAAAAAAAAAFWpUFVVVVUFaVVQVVUFVWlQVVVVVQVqVVBVVVVVBVVpUFVVVVUFaVUAAAAAAAAAAFVpUFVVVVUFalVQVVUFValQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAFVpUFVVVVUFalVQVVUFValQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAFVpUFVVVVUFalVQVVUFVWlQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAFVpUFVVVVUFalVQVVUFVWlQVVVVVQVpVVBVVVVVBVVpUFVVVVUFalUAAAAAAAAAAFVpkJmZmZkJaVVQVVUFVWmQmZmZmQlpVVBVVVVVBVVVkJmZmZkJaVUAAAAAAAAAAFVpoKqqqqoKaVVQVVUFVWkAqqqqqgBpVVBVVVVVBVVVoKqqqqoKaVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVUAqqqqqgBVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVUAqqqqqgBVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVUAqqqqqgBVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVZWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVZWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVZWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVZWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVVVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFVVWgqqqqqgpVVVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFAAAAAKCqAAAAAFBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFAAAAAKCqAAAAAFBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFUAUAAKCqAABQBVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVZVQVVUFUAUAAKCqAABQBVBVVVVVBVVVoKqqqqoKVVUAAAAAAAAAAFVVAKCqqgoAVZUAAAAAUAWgqqqqqgpQBQAAAAAAAFVVAKCqqgoAVVUAAAAAAAAAAFVVAKCqqgoAVVUAAAAAUAWgqqqqqgpQBQAAAAAAAFVVAKCqqgoAVVUAAAAAAAAAAFVVAKCqqgoAVVVVVVVVUFWpqqqqqmpVBWlVVVVVVVVVAKCqqgoAVVUAAAAAAAAAAFVVAFBVVQUAVVVVVVVpUFWpqqqqqmpVBalWVVVVVVVVAFBVVQUAVVUAAAAAAAAAAFVVAFVVVVUAVVVVVVVpUFWpqqqqqmpVBalWVVVVVVVVAFVVVVUAVVUAAAAAAAAAAFVVAFVVVVUAVVVVVVVpUFWpqqqqqmpVBalWVVVVVVVVAFVVVVUAVVUAAAAAAAAAAFVVAFVVVVUAVVVVVVVpUAWgqqqqqgpQBalWVVVVVVVVAFVVVVUAVVUAAAAAAAAAAFVVAFVVVVUAVVVVVVVpUAWgqqqqqgpQBalWVVVVVVVVAFVVVVUAqWoAAAAAAAAAAFVVAFBVVQUAVVVVVVVpAAAAqqqqqgAAAKlWVVVVVVVVAFBVVQUAqWoAAAAAAAAAAFUVAKCqqgoAVFVVVVVVAAAAqqqqqgAAAFVVVVVVVVUVAKCqqgoAqGoAAAAAAAAAAFVVAKCqqgoAAAAAAAAAAAAAqqqqqgAAAAAAAAAAAAAAAKCqqgoAqmoAAAAAAAAAAKpqAKCqqgoAAAAAAAAAAAAAqqqqqgAAAAAAAAAAAAAAAKCqqgoAVVUAAAAAAAAAAKpqoKqqqqoKAACgqqqqqgqgqqqqqgqgqqqqqqqqCgAAoKqqqqoKAAAAAAAAAAAAAKlqoKqqqqoKAACgqqqqqgqgqqqqqgqgqqqqqqqqCgAAoKqqqqoKAAAAAAAAAAAAAKlqoKqqqqoKUAWgqqqqqgqgqqqqqgqgqqqqqqqqClAFoKqqqqoKUFUJAAAAAAAAAFVpoKqqqqoKUAWgqqqqqgqgqqqqqgqgqqqqqqqqClAFoKqqqqoKUFUJAAAAAAAAAAAAoKqqqqqqVpWqqqqqqgqgqqqqqgqgqqqqqqqqqlaVqqqqqqoKUFUJAAAAAAAAAAAAoKqqqqqqVpWqqqqqqgqgqqqqqgqgqqqqqqqqqlaVqqqqqqoKUFUFAAAAAAAAUJUGoKqqqqqqVpWqqqqqqgqgqqqqqgqgqqqqqqqqqlaVqqqqqqoKUFUFAAAAAAAAUFUFoKqqqqqqVpWqqqqqqgqgqqqqqgqgqqqqqqqqqlaVqqqqqqoKYFUFAAAAAAAAUFUFoKqqqqqqVpWqqqqqqgqgqqqqqgqgqqqqqqqqqlaVqqqqqqqqalUFAAAAAAAAUFUJoKqqqqqqVpWqqqqqqgqgqqqqqgqgqqqqqqqqqlaVqqqqqqqqalUFAAAAAAAAUFUJoKqqqqqqVpWqqqqqqqqqqqqqqqqqqqqqqqqqqlaVqqqqqqqqalUFAAAAAAAAUFUJoKqqqqqqVpWqqqqqqqqqqqqqqqqqqqqqqqqqqlaVqqqqqqqqalUFAAAAAAAAUFVpqaqqqqqqVpWqqqqqqqqqqqqqqqqqqqqqqqqqqlaVqqqqqqqqalUFAAAAAAAAUFWpqqqqqqqqVpWqqqqqqqqqqqqqqqqqqqqqqqqqqlaVqqqqqqqqalUFAAAAAAAAUFWpqqqqqqqqVpWqqqqqqqqqqqqqqqqqqqqqqqqqqlYFoKqqqqoKYFUFAAAAAAAAUFWpqqqqqqqqVpWqqqqqqqqqqqqqqqqqqqqqqqqqqlYFoKqqqqoKUFUFAAAAAAAAUFWpqqqqqqoKUAWgqqqqqqqqqqqqqqqqqqqqqqqqClBVAACgqgAAUFUFAAAAAAAAUFWpqqqqqqoKUAWgqqqqqqqqqqqqqqqqqqqqqqqqClBVAACgqgAAUFUJAAAAAAAAUFUJoKqqqqoKAACgqqqqqqqqqqqqqqqqqqqqqqqqCgAAAACgqgAAUFUJAAAAAAAAUFUFoKqqqqoKAACgqqqqqqqqqqqqqqqqqqqqqqqqCgAAAACgqgAAUFUJAAAAAAAAUFUFAACqCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoKqqqqoKAAAAAAAAAAAAUFUFAACqCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoKqqqqoKAAAAAAAAAAAAUFUFAACqCgAAVFVVAAAAAAAAAAAAAAAAAAAAAABVVVUVoKqqqqoKVFUAAAAAAAAAUFUFAACqCgAAqapWAAAAAAAAAAAAAAAAAAAAAACqqqpqoKqqqqoKqmoAAAAAAAAAAAAAoKqqqqoGqaoGkKqqqqqqqgqgqqqqqqqqVgWgqqpqoKqqqqoKqmoAAAAAAAAAAAAAoKqqqqoGqmoFUFVVVVVVVQlgVVVVVVVVVQVQqapqoKqqqqoKqWoAAAAAAAAAAFUVoKqqqqoGqmoAVVVVVVVVVQlgVVVVVVVVVVUAqapqoKqqqqoKqWoAAAAAAAAAAKlqoKqqqqoGqmoAVVVVVVVVVQlgVVVVVVVVVVUAlapqoKqqqqoKVVUAAAAAAAAAAKlqoKqqqqoGqgpQVVVVVVVVVQlgVVVVVVVVVVUFkKpqoKqqqqoKVVUAAAAAAAAAAKpqoKqqqqoGaQVQVVVVVVVVVQlgVVVVVVVVVVUFUKlqoKqqqqoKVVUAAAAAAAAAAKpqoKqqqqoGaQBVVVVVVVVVVQlgVVVVVVVVVVVVAKlqoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKVQBVlaqqqqqqlgZQlaqqqqpqVVVVAJVqoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKBVBVlQAAAAAAAAAAAAAAAAAAAFVVBZBqoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKBVBVVQAAAAAAAAAAAAAAAAAAAFVVBVBVoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKAFVVBVBVVVVVaZWqalVVVVVVBVBVVQAAoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKAFVVBVBVVVVVVVVVVVVVVVVVBVBVVQAAoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKUFVVAFVVVVVVVVVVVVVVVVVVVQBVVVVVqaqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKUFVVAFVVVVVVVVVVVVVVVVVVVQBVVVVVlaqqqqoKVVUAAAAAAAAAAFVVoKqqqqpqVVUFUAAAAABQVVVVVQUAAAAAUAVQVVVVlaqqqqoKVVUAAAAAAAAAAFVVoKqqqqpWVVUFUAAAAABQVVVVVQUAAAAAUAVQVVVVlaqqqqoKVVUAAAAAAAAAAFVVoKqqqqpWVVUABaCqqqoAVVVVVQCqqqqqAFUAVVVVlaqqqqoKVVUAAAAAAAAAAFVVoKqqqqpWVVUABaCqqpYAVQVQVQCWqqqqAFUAVVVVlaqqqqoKVVUAAAAAAAAAAFVVoKqqqqpWVQVQAKqqqpYKUAVQBaCWqqqqClAFAAAAAAAAAKoKVVUAAAAAAAAAAFVVoKqqqqpWVQVQAKqqqlYJUAVQBWCVqqqqClAFAAAAAAAAAKoKVVUAAAAAAAAAAFVVoKoAAAAAAAAFoKqqqlapAAVQAGqVqqqqqgBVVVVVAAAAAKoKVVUAAAAAAAAAAFUVoKoAAAAAAAAFoKqqqlaVAFVVAFaVqqqqqgBVVVUVAAAAAKoKVFUAAAAAAAAAAFVVoKoAAAAAAAAAqqqqqlaVCgAAoFaVqqqqqgoAAAAAoKqqqqoKVVUAAAAAAAAAAFVVoKoAAAAAAAAAqqqqqlZVCQAAYFWVqqqqqgoAAAAAoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKoAqgqqoKoFZVqaqqalWVCqCqqqqqCqAKoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKoAqgqqoKoKqqqqqqqqqqCqCqqqqqCqAKoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKoKqqqqqqqqqqCqCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKAACgqqqqqgoAAKCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoKAACgqqqqqgoAAKCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoAVZWgqqqqqgpVVQCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqqoAqYKgqqqqqgqBagCqqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqgpQqYKgqqqqqgqBagWgqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqqqqqqqqgpQqaqgqqqqqgqqagWgqqqqqqqqqqqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKoAqgqgBVqaqgqqqqqgqqalUAqqqqCqAKoKqqqqoKVVUAAAAAAAAAAFVVoKqqqqoKoAqgqgBVqWqgqqqqqgqpalUAqqqqCqAKoKqqqqoKVVUAAAAAAAAAAFVVAAAAAAAAAAAAAFBVqWqgqqqqqgqpalUFAAAAAAAAAAAAAAAAVVUAAAAAAAAAAFVVAAAAAAAAAAAAAFBVVVWgqqqqqgpVVVUFAAAAAAAAAAAAAAAAVVUAAAAAAAAAAFVVVVVVVVVVVFVVVVVVVVWgqqqqqgpVVVVVVVVVVVUVVVVVVVVVVVUAAAAAAAAAAFVVVVVVVVVVVVVVVVVVVVWgqqqqqgpVVVVVVVVVVVVVVVVVVVVVVVUAAAAAAAAAAFVVVVVVVVVVVVVVVVVVVVWgqqqqqgpVVVVVVVVVVVVVVVVVVVVVVVUAAAAAAAAAAFVVVVVVVVVVVVVVVVVVVVWgqqqqqgpVVVVVVVVVVVVVVVVVVVVVVVUAAAAAAAAAAFVVVVVVVVVVVVVVVVVVVVWgqqqqqgpVVVVVVVVVVVVVVVVVVVVVVVUAAAAAAAAAAFVVVVVVVVVVVVVVVVVVVVWgqqqqqgpVVVVVVVVVVVVVVVVVVVVVVVUAAAAAAAAAAFVVVVVVVVVVVVVVVVVVVVWgqqqqqgpVVVVVVVVVVVVVVVVVVVVVVVUAAAAAAAAAAFVVVVVVVVVVVVVVVVVVVVWgqqqqqgpVVVVVVVVVVVVVVVVVVVVVVZUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVVWgqqqqqgpVVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVZWgqqqqqgpVVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVZWgqqqqqgpVVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVVWgqlaVqgpVVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVVWgqlaVqgpVVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVVWgVlVVlQpVVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUFUAVlVVBQBVVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUFUAVVVVBQBVVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFUAVVVVVQBVBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFUAVVVVVQBVBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFUAVVVVVQBVBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFUAFQAAVABVBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAEAAAVABVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAQABVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","terr":"JSUlJSUlJSVBQUFBQSUiIiIiIiIiIiIlQUFBQUEyMjIyMjIyQUFBQUElIiIiIiIiIiIiJUFBQUFBMjIyMjIyMjIyMjJBQUFBQSUiIiIiIiIiIiIlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElIiIiIiIiIiIiJUFBQUFBMjIyMjIyMkFBQUFBJSIiIiIiIiIiIiVBQUFBQTIyMjIyMjIyMjIyQUFBQUElIiIiIiIiIiIiJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSIiIiIiIiIiIiVBQUFBQTIyMjIyMjJBQUFBQSUiIiIiIiIiIiIlQUFBQUEyMjIyMjIyMjIyMkFBQUFBJSIiIiIiIiIiIiVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSUiIiIiIiIiIiIlQUFBQUEyMjIyMjIyQUFBQUElIiIiIiIiIiIiJUFBQUFBMjIyMjIyMjIyMjJBQUFBQSUiIiIiIiIiIiIlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElIiIiIiIiIiIiJUFBQUFBMjIyMjIyMkFBQUFBJSIiIiIiIiIiIiVBQUFBQTIyMjIyMjIyMjIyQUFBQUElIiIiIiIiIiIiJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSIiIiIiIiIiIiVBQUFBQTIyMjIyMjJBQUFBQSUiIiIiIiIiIiIlQUFBQUEyMjIyMjIyMjIyMkFBQUFBJSIiIiIiIiIiIiVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSUiIiIiIiIiIiIlQUFBQUEyMjIyMjIyQUVFRUElIiIiIiIiIiIiJUFBQUFBMjIyMjIyMjIyMjJBQUFBQSUiIiIiIiIiIiIlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElIiIiIiIiIiIiJUFBQUFBMjIyMjIyMkFBQUFBJSIiIiIiIiIiIiFBQUFBQTIyMjIyMjIyMjIyQUFBQUElIiIiIiIiIiIiJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQURBIiIiIiIiIiIiIiJBREFBQTIyMjIyMjJBQUFEQSIiIiIiIiIiIiIiQURBQUEyMjIyMjIyMjIyMkFBQURBJSIiIiIiIiIiIiJBREFBQSUlJSUlJSUlJSUlJSUlJSVBQUFEQSIiIiIiIiIiIiIiQURBQUEyMjIyMjIyQUFBREEiIiIiIiIiIiIiIkFEQUFBMjIyMjIyMjIyMjJBQUFEQSIiIiIiIiIiIiIiRERBQUElJSUlJSUlJSUlJSUlJSUlQUFAREEiIiIiIiIiIiIiIkREQUFBMjIyMjIyMkFBQURBIiIiIiIiIiIiIiJBREFBQTIyMjIyMjIyMjIyQUFBREEiIiIiIiIiIiIiIkREQUFBJSUlJSUlJSUlJSUlJSUlJUFBQURBIiIiIiIiIiIiIiJEREFBQTIyMjIyMjJBQUFERCIiIiIiIiIiIiIiQURBQUEyMjIyMjIyMjIyMkFBQURBIiIiIiIiIiIiIiJEREFBQSUlJSUlJSUlJSUlJSUlJSVBQUBEQSIiIiIiIiIiIiIiRERBQUEyMjIyMjIyQUFBREEiIiIiIiIiIiIiIkREQUFBMjIyMjIyMjIyMjJBQUFEQSIiIiIiIiIiIiIiQURBQUElJSUlJSUlJSUlJSUlJSUlQUFBREQiIiIiIiIiIiIiIkFEQUFBMjIyMjIyMkFBQURBIiIiIiIiIiIiIiJEREFBQTIyMjIyMjIyMjIyQUFBREEiIiIiIiIiIiIiIkFEQUFBJSUlJSUlJSUlJSUlJSUlJUFBQURBIiIiIiIiIiIiIiJEREFBQTIyMjIyMjJBQUFERCIiIiIiIiIiIiIiQURBQUEyMjIyMjIyMjIyMkFBQURBIiIiIiIiIiIiIiJEREFBQSUlJSUlJSUlJSUlJSUlJSVBQUFEQSIiIiIiIiIiIiIiRERBQUEyMjIyMjIyQUFBREEiIiIiIiIiIiIiIkFEQUFBMjIyMjIyMjIyMjJBQUFEQSIiIiIiIiIiIiIiRERBQUElJSUlJSUlJSUlJSUlJSUlQUFBREElJSUlJSUlJSUlJUFEQUFBMjIyMjIyMkFBQURBJSUlJSUlJSUlJSVBREFBQTIyMjIyMjIyMjIyQUFBQUElJSUlJSUlJSUlJUFEQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSVBQUFBQTIyMjIyMjJBQUFBQSUjJSUlJSUlJSQlQUFBQUEyMjIyMjIyMjIyMkFBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlQUFBQUEyMjIyMjIyQUFBQUE1MzU1NTU1NTU0NUFBQUFBMjIyMjIyMjIyMjJBQUFBQSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJUFBQUFBMjIyMjIyMkFBQUFBNTU1NTU1NTU1NTVBQUFBQTIyMjIyMjIyMjIyQUFBQUElJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSVBQUFBQTIyMjIyMjJBQUFBQTU1NTU1NTU1NTU1QUFBQUEyMjIyMjIyMjIyMkFBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSFBQUFBQSUlJSUlJSUlJSUlQUFBQUEyMjIyMjIyRkFBQUE1NTU1NTU1NTU1NUFBQUFBMjIyMjIyMjIyMjJBQUFBQSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUhQUFBQUElJSUlJSUlJSUlJUFBQUFBMjIyMjIyMkZBQUFBNTU1NTU1NTU1NTVBQUFBQTIyMjIyMjIyMjIyQUFBQUElJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlIUFBQUFBJSUlJSUlJSUlJSVBQUFBQTIyMjIyMjJGQUFBRTU1NTU1NTU1NTUzQUFBQUEyMjIyMjIyMjIyMkFBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSFBQUFBQSUlJSUlJSUlJSUlQUFBQUEyMjIyMjIyRkFBQUU1NTU1NTU1NTU1M0FBQUFBMjIyMjIyMjIyMjJBQUFBQSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUhQUFBQUElJSUlJSUlJSUlJUFBQUFBMjIyMjIyMkZBQUFGNTU1NTU1NTU1NTVBQUFBQTIyMjIyMjIyMjIyQUFBQUElJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSVBQUFBQTIyMjIyMjJGQUFBRjU1NTU1NTU1NTU1QUFBQUEyMjIyMjIyMjIyMkFBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlQUFBQUEyMjIyMjIyQUFBQUYzNTU1NTU1NTU1NUFBQUFBMjIyMjIyMjIyMjJBQUFBQSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJUFBQUFBMjIyMjIyMkFBQUFGNTU1NTU1NTU1NTVBQUFBQTIyMjIyMjIyMjIyQUFBQUElJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSVBQUFBQTIyMjIyMjJBQUFBRjU1NTU1NTU1NTU1QUFBQUEyMjIyMjIyMjIyMkFBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlQUFBQUEyMjIyMjIyQUFBQUY1NTU1NTU1NTU1NUFBQUFBMjIyMjIyMjIyMjJBQUFBQSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJUFBQUFBMjIyMjIyMkFBQUFGMzU1NTU1NTU1NTNBQUFBQTIyMjIyMjIyMjIyQUFBQUElJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSVBQUFBRTIyMjIyMjJBQUFBRjU1NTU1NTU1NTUzQUFBQUEyMjIyMjIyMjIyMkFBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlQUFBQUUyMjIyMjIyQUFBQUY1NTU1NTU1NTU1M0FBQUFBMjIyMjIyMjIyMjJBQUFBQSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJUFBQUFFMjIyMjIyMkFBQUFGNTU1NTU1NTU1NTNBQUFBQTIyMjIyMjIyMjIyQUFBQUElJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSVBQUFBRTIyMjIyMjJBQUFBQTU1NTU1NTU1NTUzQUFBQUEyMjIyMjIyMjIyMkFBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlQUFBQUUyMjIyMjIyQUFBQUE1NTU1NTU1NTU1M0FBQUFBMjIyMjIyMjIyMjJBQUFBQSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJUFBQUFFMjIyMjIyMkFBQUFBNTQ0NDU1NTQzMzNBQUFBQTIyMjIyMjIyMjIyQUFBQUElJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSVBQUFBRTIyMjIyMjJBMTExQUVEREQ1NTU0RERFQTExMUEyMjIyMjIyMjIyMkFBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlQUFBQUUyMjIyMjIyQTExMUE1NDQ0NTU1MzQ0NUExMTFBMjIyMjIyMjIyMjJBQUFBQSUkJCUlJSUlJCQlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElHR0dHR0dHR0dJUFBQUFBQUFBQUFBQUExMTExNTU1NTU1NTU1NTUxMTExQURBQUFBQUFBQUFBQUFBQUElHBwdHR0dHRwcJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJBwcHBwcHBwcHCVBQUFBQUFBQUFBQURBMTExMTU1NTU1NTU1NTU1MTExMUFEREFBQUFBQUFBQUFBQUFBJRwcHBwcHBwcHCVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSQcHBwcHBwcHBwlQUFBQUFBQUFBQUFEQTExMTE1NTU1NTU1NTU1NTExMTFCRERBQUFBQUFBQUFBQUFBQSUcHBwcHBwcHBwlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUEkHBwcHBwcHBwcJUFBQUFBQUFBQUFBREExMTFBNTQ1NTU1NTU1MzVBMTExQUREQUFBQUFBQUFBQUFBQUElHBwcHBwcHBwcJUFERERBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJB0dHR0dHR0dHSVBQUFBQUFBQUFBQUFBQUFBQSUkJSUlJSUlJSQlQUFBQUFBQUFBQUFBQUFBQUFBQUFBJRwcHR0dHR0cHCVEREREQSUlJSUlJSUlJSUlJSUlJSVEREREQSQlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlIzMjJSUlJSUlJSUkJTUlJSUlJSUlJSUlJSUlJSUlJSUlJSUkJCUlJSUlJCQlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUREREEkJSUlJSUlJSUlJR0cHBwdJSUlJSUlJSUlJSMzIyUlJSUlJSUlJSQ0JCUlJSUlJSUlJSUlJSUlHBwcHBwkJSUlJSUlJSUlJUEhIiIiIyUlJSUlJSUlJSUlJSUlJUFBQURBJCUlJSUlJSUlJSUVHBwcHSUlJSUlJSUlJSUjMyMlJSUlJSUlJSUkNCQlJSUlJSUlJSUlJSUlJRQcHBwVJSUlJSUlJSUlJSVBISIiGhsbGxsbGxsbJSUlJSUlIyIiIiMhQSQlJSUlJSUlJSUlFRwcHB0lJSUlJSUlJSUlIzMjJSUlJSUlJSUlJDQlJSUlJSUlJSUlJSUlJSUVHBwcFSUlJSUlJSUlJSUlQSEiIhobGxsbGxsbGx0dHR0dHRsaIiIiIUEkJSUlJSUlJSUlJR0cHBwdJSUlJSUlJSUlJSMzIyUlJSUlJSUlJSM0JSUlJSUlJSUlJSUlJSUlFRwcHB0lJSUlJSUkJSUlJSUlIiIaGxsbGxsbGxsdHR0dHR0bGiIiIiNBJCUlJSUlJSUlJSUdHBwcHSUlJSUlJSUlJSUjIyMlJSUlJSUlJSUjJSUlJSUlJSUlJSUlJSUlJRUcHBwdJSUlJSUlJCUlJSUlJSIiGhsbGxsbGxsbHR0dHR0dGxoiIiIjISQlJSUlJSUlJSUlHRwcHB0lJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUVHBwcHSUlJSUlJSUlJSUlJSUiIhobGxsbGxsbGx0dHR0dHRsaIiIiJSUlJSUlJSUlJSUlJRUcHBwdJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlFRwcHBUlJSUlJSUlJSUlJSAjIiIaGxsbGxsbGxsdHR0dHR0bGiIiIiUlJSUlJSUlJSUlJSUVHBwcHSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJRUcHBwcJSUlJCUlJSUkJCVBISIiGhsbGxsbGxsbHR0dHR0dGhoiIiIlJSUlJSUlJSUlJSUlHRwcHB0lJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUcHBwcHDQ0NDQkJSUlNDQ1QSEiIhobGxsbGxsbGx0dHR0dHRoaIiIiIUEkJSUlJSUlJSUlJCUlJSUlJSUlJSUlJSUlJSUlIyMlJSUlJSMjJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJCQkJCUlJSUlJUEhIiIiIyUlJSUlJSUdHR0dHR0aGiIiIiFBNDQ0JCUlJTQ0NDFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUREQUFBQUFBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlIyIiIiIhQSQlJSUlJSUkJCQhQURERERBQSIgICAgICAgICAgICAgIEQgICAgICAgICQkJCAgICIiIkREREREREREQSUlJSUlJSUlJSUlREREREElJSUlJSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlIURERERBQSIiIiIiIiIiIiIiIiIiIiBEJCIiIiIiIiIiIiIiIiIiIiIiQUFEREREREEkJSUlJSUlJSUlJUFERERBJSUlJSUlJSUlJSUlJSUlJUFERERBJSUlJSUlJSUlJSFEREREQiIiIiIiIiIiIiIiIiIiIiIkRCQiIiIiIiIiIiIiIiIiIiIiIiJBQURERERBJCUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVEREREQSUlJSUlJSUlJSUhQURBQSIiIiIiIiIiIiIiIiIiIiIiJEQkIiIiIiIiIiIiIiIiIiIiIiIiIkFBREREQSQlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJEFBQSIiIiIiICAgICAkICAgICAiJCJEIiIiICAgICQkJCAgICIiIiIiIiIiQUFEREEgJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSRBQSIiIiIiIiJBQUFBQUFBQUFBREJCREREREFBQUFBQUFBQUFBQSIiIiIiIiJBQUFBJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUkQSIiIiIiIiJBQUFBQUFBQUFBQUFGQUZBRkFBQUFBQUFBQUFBQUFBIiIiIiIiIiIiIiUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJCIiIiIiIiJBQUFBQUFBQUFBQUFBQUZBRkFBQUFBQUFBQUFBQUFBQUEiIiIiIiIiIiIiJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJCUlJSUlJSUlJSIiIiIiIiJBQUElJSUlJSUlJUFBQUFBQUFBQUFBJCUlJSUlJSUlQUFBQSIiIiIiIiIiIiUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSQlJSUlJSUlJSUiIiIiIiJBQUElJSUlJSUlIiQlQUFBQUFBQUFBJSQiJSUlJSUlJSVBQUFBIiIiIiIiIiIkJSUlJSUkJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUEkJSUlJSUlJSUlIiIiIiJBQUEkJSUlJSUlJSIiJCRBQUFBQUFBJSUiIiUlJSUlJSUkJEFBQUFBQUFBQUE1NDQ0NDQ0JCUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJCUlJTU1NTQ0NDRBQUFBQUElJSUlJSUlJSUiIiIkJEFBQUFBJCQiIiIlJSUlJSUlJSUkQUFBQUFBQUFBJSQkJCQlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSQlJSUlJSUkJCQkJDQ0NCQlJCUlJSUlJSUlIiIiIiQlJSUlJSQiIiIiJSUlJSUlJSUlJCQlJSUlNTU1JSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUEkJSUlJSUlJSUlJSU0NTUlJSUlJSUlJDUlJSUlJSUlJSUlJSUlJSUlJSUkNCUlJSUlJSUlJSUlJTU1NSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJCUlJSUlJSUlJSUlNTU1JSUlJSUlJSQ1JSUlJSUlJSUlJSUlJSUlJSUlJDQkJSUlJSUlJSUlJSU1NTUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSQlJSUlJSUlJSUlJTU1NSUlJSUlJSUkNCQlJSUlJSUlJSUlJSUlJSUlJSU0JCUlJSUlJSUlJSUlNTU1JSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUEkJSUlJSUlJSUlJSU1NTUlJSUlJSUlJDQkJSUlJSUlJSUkJSUlJSUlJSUlNCUlJSUlJSUlJSUlJTU1NSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJCUlJSUlJSUlJSUlNTU1JSUlJSUlJSQ0JCUlJSUlJSUlJSUlJSUlJSUlJTQlJSUlJSUlJSUlJSU1NTUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSQlJSUlJSUlJSUlJTU1NSUlJSUlJSUkNCQlJSUlJSUlJSUlJSUlJSUlJCQ0JSUlJSUlJSUlJSUlNTU1JSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUEkJSUlJSUlJSUlJSU1NTUlJSUlJSUlJUFBQUFFJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJTU1NSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBJCUlJSUlJSUlJSUlNTU1JSUlJSUlJUFBRERBRSUlJSUlJSUlJSUlQUFEREFBJCUlJSUlJSUlJSU1NTUlJSUlJSUlJSUlJSVBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQSQlJSUlJSUlJSUlJTU1NSQkJSUlJUFBQUREREUlJSUlJSUlJSUlJURERERBQUEkJSUlJSUlJSUlNTU1JSUlJSUlJSUlJSUlQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUEkJSUlJSUlJSQkJCQ0NDQkJCQkJUFBQUFERERBJSUlJSUlJSUlJSVBREREQUFBQSUlJSUlJSUlJTU1NSUlJSUlJSUlJSUlJUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSUlJSUlJSUlJSUlQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUElJSUlJSUlJSUlJUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUElJSUlJSUlJSUlJSUlJSUlQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBJSUlJSUlJSUlJSVBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBJSUlJSUlJSUlJSUlJSUlJUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSUlJSUlJSUlJSUlQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSUlJSUlJSUlJSUlJSUlJSVBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUEkJCQkJCQkJCQkJEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJUFBQUFFJCQkJBwUHCQkJCRBQUFBQSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJR0dHR0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDSVBQUFBQSQkJBwcHBwUHBwkQUFBQUElDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0lJSUlJSUlJSUlJSUlJSUdDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0lQUFBQUEkJB0dHR0dHR0cJEFBQUFBJQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDSUlJSUlJSUlJSUlJSUlDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NJSFBQUFBJR0dHR0dHR0dHSVBQUFBQSUNDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NJSUlJSUlJSUlJQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0hIUFBQSUdHR0dHR0dHR0lQUFBQSElDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDSUlJSUlJSUlDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NCSFBQUElHR0NDQ0NDR0dJUFBQUEhDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NJSUlJSUNDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQkhIUFBJR0NDQ0NDQ0NHSVBQUEhIQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDSUlJSUNDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0JCSEhISUNDQ0NDQ0NDQ0lQUEhIQkNDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0lJSUlDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NCQkJCQkNDQ0NDQ0NDQ0NJSEhIQkJDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0lJSUlJQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQkJCQkJDQ0NDQ0NDQ0NDQ0hCQkJCQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NJSUlJSUNDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0JCQkJCQ0NDQ0NDQ0NDQ0NCQkJCQkNDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDSUlJSUlDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NCQkJCQkNDQ0NDQ0NDQ0NDQkJCQkJDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NJSUlJQ==","rects":{"Left Spawn":[35.5,16.5,45.5,27.0],"Left Spawn 2":[26.0,16.5,35.5,27.0],"Middle Left Spawn":[82.0,16.5,92.0,27.5],"Middle Right Spawn":[92.0,16.5,102.0,27.5],"Right Spawn":[155.5,16.5,165.5,27.0],"Right Spawn 2":[146.0,16.5,155.5,27.0],"Left Move 0":[26.0,97.5,35.0,110.0],"Left Move 1":[37.0,153.0,43.0,157.5],"Left Move 2":[72.5,134.5,79.5,139.5],"Right Move 0":[157.0,94.0,166.0,106.0],"Right Move 1":[148.5,152.5,155.0,157.5],"Right Move 2":[104.5,135.0,111.5,140.0],"Middle Move":[84.0,101.0,100.0,109.5],"Load":[88.5,174.0,96.0,177.5]},"routes":[{"spawns":["Left Spawn","Left Spawn 2"],"wps":["Left Move 1","Left Move 2","Load"]},{"spawns":["Right Spawn","Right Spawn 2"],"wps":["Right Move 1","Right Move 2","Load"]},{"spawns":["Middle Left Spawn","Middle Right Spawn"],"wps":["Middle Move","@BRANCH"]}],"branches":{"left":["Left Move 0","Left Move 1","Left Move 2","Load"],"right":["Right Move 0","Right Move 1","Right Move 2","Load"]}};
 
 /* ================= helpers ================= */
 const $ = id => document.getElementById(id);
@@ -139,12 +135,10 @@ const rand = (a,b) => a + Math.random()*(b-a);
 const rint = (a,b) => Math.floor(rand(a,b+1));
 let toastT = null;
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.style.opacity=1;
-  clearTimeout(toastT); toastT=setTimeout(()=>t.style.opacity=0, 1600); }
+  clearTimeout(toastT); toastT=setTimeout(()=>t.style.opacity=0, 1700); }
 
-/* ---- tiny synth sfx ---- */
-let AC=null, muted=false;
+let AC=null;
 function sfx(kind){
-  if(muted) return;
   try{
     AC = AC || new (window.AudioContext||window.webkitAudioContext)();
     if(AC.state==='suspended') AC.resume();
@@ -160,15 +154,31 @@ function sfx(kind){
   }catch(e){}
 }
 
-/* ================= board constants ================= */
-const COLS=11, ROWS=20;
-const SPAWN={c:5,r:0}, GOAL={c:5,r:ROWS-1};
-const buildable = (c,r) => r>=2 && r<=ROWS-3 && c>=0 && c<COLS;
+/* ================= map decoding ================= */
+const W = MAP.W, H = MAP.H;
+const packRaw = Uint8Array.from(atob(MAP.pack), c=>c.charCodeAt(0));
+const terrRaw = Uint8Array.from(atob(MAP.terr), c=>c.charCodeAt(0));
+const cellType = new Uint8Array(W*H);       // 0 blocked, 1 walk, 2 walk+build
+for(let i=0;i<W*H;i++) cellType[i] = (packRaw[i>>2] >> ((i&3)*2)) & 3;
+const walkable = i => cellType[i] > 0;
 
-/* WC3 unit conversions */
-const rangeCells = r => clamp(r/128, 1.2, 30);
-const speedCells = ms => ms/175;
-const ATK_MULT = { // attack type vs armor class
+function rectCells(rc){ // [x0,r0,x1,r1] float cell coords -> integer cell list
+  const out=[];
+  for(let r=Math.max(0,Math.floor(rc[1])); r<Math.min(H,Math.ceil(rc[3])); r++)
+    for(let c=Math.max(0,Math.floor(rc[0])); c<Math.min(W,Math.ceil(rc[2])); c++)
+      if(walkable(r*W+c)) out.push(r*W+c);
+  return out;
+}
+function rectCenter(rc){ return {x:(rc[0]+rc[2])/2, y:(rc[1]+rc[3])/2}; }
+function inRect(x,y,rc){ return x>=rc[0]&&x<=rc[2]&&y>=rc[1]&&y<=rc[3]; }
+
+/* waypoint field names */
+const WP_NAMES = ['Left Move 0','Left Move 1','Left Move 2','Right Move 0','Right Move 1','Right Move 2','Middle Move','Load'];
+
+/* ================= conversions (64 wc3 units per cell) ================= */
+const rangeCells = r => clamp(r/64, 1.5, 60);
+const speedCells = ms => ms/64;
+const ATK_MULT = {
   normal:{light:1,medium:1.5,fort:.7,divine:.05,none:1},
   pierce:{light:2,medium:.75,fort:.5,divine:.05,none:1.5},
   siege:{light:1,medium:.5,fort:1.5,divine:.05,none:1.5},
@@ -180,23 +190,22 @@ const armorClass = a => a==='small'?'light':a==='fort'?'fort':a==='divine'?'divi
 /* ================= state ================= */
 let race=null, diff=null, S=null;
 const DIFFS=[
- {id:'easy', name:'Easy', d2:'30 lives · 90% HP', lives:30, hp:.9},
+ {id:'easy', name:'Easy', d2:'30 lives · 80% HP', lives:30, hp:.8},
  {id:'normal', name:'Normal', d2:'20 lives · 100% HP', lives:20, hp:1},
  {id:'hard', name:'Hard', d2:'15 lives · 120% HP', lives:15, hp:1.2},
  {id:'perf', name:'Perfection', d2:'1 life · 130% HP', lives:1, hp:1.3},
 ];
 
-/* ================= title screen ================= */
 (function initTitle(){
   const rc=$('races');
-  GAME_DATA.races.forEach((r,i)=>{
+  GAME_DATA.races.forEach(r=>{
     const b=document.createElement('div'); b.className='raceBtn'; b.style.setProperty('--c', r.color);
     b.innerHTML=`<div class="ic"></div><div class="nm">${r.name}</div><div class="bd">${r.towers.length} towers</div>`;
     b.onclick=()=>{ race=r; [...rc.children].forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); checkPlay(); sfx('build'); };
     rc.appendChild(b);
   });
   const dc=$('diffs');
-  DIFFS.forEach((d,i)=>{
+  DIFFS.forEach(d=>{
     const b=document.createElement('div'); b.className='diffBtn';
     b.innerHTML=`<div class="d1">${d.name}</div><div class="d2">${d.d2}</div>`;
     b.onclick=()=>{ diff=d; [...dc.children].forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); checkPlay(); };
@@ -207,67 +216,140 @@ const DIFFS=[
   $('playBtn').onclick = startGame;
 })();
 
-/* ================= game setup ================= */
-const cv=$('cv'), ctx=cv.getContext('2d');
-let CELL=30, BX=0, BY=0, DPR=1;
-
-function sizeBoard(){
-  const w=$('boardWrap').clientWidth, h=$('boardWrap').clientHeight;
-  CELL = Math.floor(Math.min(w/COLS, h/ROWS));
-  DPR = Math.min(window.devicePixelRatio||1, 2.5);
-  cv.width = COLS*CELL*DPR; cv.height = ROWS*CELL*DPR;
-  cv.style.width = COLS*CELL+'px'; cv.style.height = ROWS*CELL+'px';
-  ctx.setTransform(DPR,0,0,DPR,0,0);
+/* ================= terrain background ================= */
+const TILE_COL = [ [107,90,68],[122,110,88],[110,112,118],[90,128,74],[184,216,238],[238,242,248],[198,204,214] ];
+let bgCanvas=null;
+function buildBackground(){
+  bgCanvas = document.createElement('canvas'); bgCanvas.width=W; bgCanvas.height=H;
+  const bctx = bgCanvas.getContext('2d');
+  const img = bctx.createImageData(W,H);
+  for(let r=0;r<H;r++) for(let c=0;c<W;c++){
+    const i=r*W+c;
+    const tx = clamp(Math.floor((c+0.5)/2),0,MAP.TW-1), tr = clamp(Math.floor((r+0.5)/2),0,MAP.TH-1);
+    const tv = terrRaw[tr*MAP.TW+tx];
+    const tex = tv&7, water=(tv>>3)&1;
+    let col;
+    if(cellType[i]===0){
+      col = water? [40,62,96] : [30,39,56];               // walls & deep water
+    } else {
+      col = TILE_COL[tex] ? TILE_COL[tex].slice() : [238,242,248];
+      if(water){ col=[150,185,220]; }                      // walkable ice/shore
+      if(cellType[i]===1){ col=[col[0]*.82|0, col[1]*.84|0, col[2]*.88|0]; } // creep trail (unbuildable)
+    }
+    const n = ((c*7349+r*3761)%13)-6;                       // subtle noise
+    const o=i*4;
+    img.data[o]=clamp(col[0]+n,0,255); img.data[o+1]=clamp(col[1]+n,0,255);
+    img.data[o+2]=clamp(col[2]+n,0,255); img.data[o+3]=255;
+  }
+  bctx.putImageData(img,0,0);
 }
-window.addEventListener('resize', ()=>{ if(S) sizeBoard(); });
 
+/* ================= camera ================= */
+const cv=$('cv'), ctx=cv.getContext('2d');
+let DPR=1, VIEW_W=0, VIEW_H=0;
+const cam = { x:0, y:0, s:4, min:2, max:44 };
+function sizeBoard(){
+  const bw=$('boardWrap');
+  VIEW_W=bw.clientWidth; VIEW_H=bw.clientHeight;
+  DPR = Math.min(window.devicePixelRatio||1, 2.5);
+  cv.width=VIEW_W*DPR; cv.height=VIEW_H*DPR;
+  cv.style.width=VIEW_W+'px'; cv.style.height=VIEW_H+'px';
+  cam.min = Math.min(VIEW_W,VIEW_H)/175;
+}
+window.addEventListener('resize', ()=>{ if(S){ sizeBoard(); clampCam(); } });
+function clampCam(){
+  cam.s = clamp(cam.s, cam.min, cam.max);
+  const vw=VIEW_W/cam.s, vh=VIEW_H/cam.s;
+  if(vw>=W+24) cam.x=(W-vw)/2; else cam.x = clamp(cam.x, -12, W+12-vw);
+  if(vh>=H+24) cam.y=(H-vh)/2; else cam.y = clamp(cam.y, -12, H+12-vh);
+}
+function fitCam(){
+  cam.s = Math.min(VIEW_W/175, VIEW_H/180);
+  cam.x = 96 - VIEW_W/cam.s/2;
+  cam.y = 96 - VIEW_H/cam.s/2 + 2;
+  clampCam();
+}
+$('zin').onclick=()=>{ zoomAt(VIEW_W/2,VIEW_H/2,1.45); };
+$('zout').onclick=()=>{ zoomAt(VIEW_W/2,VIEW_H/2,1/1.45); };
+$('zfit').onclick=()=>{ fitCam(); };
+function zoomAt(px,py,f){
+  const wx=cam.x+px/cam.s, wy=cam.y+py/cam.s;
+  cam.s=clamp(cam.s*f, cam.min, cam.max);
+  cam.x=wx-px/cam.s; cam.y=wy-py/cam.s; clampCam();
+}
+
+/* ================= game start ================= */
 function startGame(){
   $('title').style.display='none';
-  $('hud').style.display='flex'; $('waveInfo').style.display='flex'; $('panel').style.display='block';
+  $('hud').style.display='flex'; $('waveInfo').style.display='flex'; $('panel').style.display='block'; $('zoomCtl').style.display='flex';
   sizeBoard();
+  buildBackground();
   S = {
     gold: GAME_DATA.meta.gold, lives: diff.lives, waveNo: 0,
     towers: [], creeps: [], shots: [], parts: [], texts: [],
-    grid: Array.from({length:ROWS},()=>Array(COLS).fill(null)), // tower refs
-    dist: null, speed: 1, paused: false,
-    nextAt: GAME_DATA.meta.firstGap, clock: 0, spawning: null,
-    selChip: null, selTower: null, over: false,
-    snow: Array.from({length:40},()=>({x:Math.random()*COLS,y:Math.random()*ROWS,v:rand(.15,.5),ph:Math.random()*7})),
+    grid: new Uint8Array(W*H),            // 1 = tower present
+    towerAt: {},                          // idx -> tower
+    fields: {}, speed: 1, paused: false, liveLevels: {},
+    nextAt: GAME_DATA.meta.firstGap, clock: 0, spawnQueues: [],
+    selChip: null, selTower: null, over: false, branchFlip: false,
+    snow: Array.from({length:60},()=>({x:Math.random()*W,y:Math.random()*H,v:rand(1,3),ph:Math.random()*7})),
   };
-  computeDist();
+  rebuildFields();
   buildTowerBar();
+  fitCam();
   updateHUD(); updateWaveInfo();
   last=performance.now();
   requestAnimationFrame(loop);
 }
 
-/* ================= pathing (BFS distance-to-goal) ================= */
-function computeDist(gridOverride){
-  const g = gridOverride || S.grid;
-  const d = Array.from({length:ROWS},()=>Array(COLS).fill(-1));
-  const q=[[GOAL.c,GOAL.r]]; d[GOAL.r][GOAL.c]=0;
-  while(q.length){
-    const [c,r]=q.shift();
-    for(const [dc,dr] of [[1,0],[-1,0],[0,1],[0,-1]]){
-      const nc=c+dc, nr=r+dr;
-      if(nc<0||nc>=COLS||nr<0||nr>=ROWS) continue;
-      if(g[nr][nc]) continue;
-      if(d[nr][nc]!==-1) continue;
-      d[nr][nc]=d[r][c]+1; q.push([nc,nr]);
+/* ================= flow fields ================= */
+const qbuf = new Int32Array(W*H);
+function computeField(name){
+  const f = new Int16Array(W*H).fill(-1);
+  const seeds = rectCells(MAP.rects[name]);
+  let qh=0, qt=0;
+  for(const s of seeds){ if(!S.grid[s]){ f[s]=0; qbuf[qt++]=s; } }
+  while(qh<qt){
+    const i=qbuf[qh++]; const d=f[i]+1;
+    const c=i%W, r=(i-c)/W;
+    if(c>0){ const j=i-1; if(f[j]===-1 && cellType[j]>0 && !S.grid[j]){ f[j]=d; qbuf[qt++]=j; } }
+    if(c<W-1){ const j=i+1; if(f[j]===-1 && cellType[j]>0 && !S.grid[j]){ f[j]=d; qbuf[qt++]=j; } }
+    if(r>0){ const j=i-W; if(f[j]===-1 && cellType[j]>0 && !S.grid[j]){ f[j]=d; qbuf[qt++]=j; } }
+    if(r<H-1){ const j=i+W; if(f[j]===-1 && cellType[j]>0 && !S.grid[j]){ f[j]=d; qbuf[qt++]=j; } }
+  }
+  return f;
+}
+function rebuildFields(){
+  for(const n of WP_NAMES) S.fields[n]=computeField(n);
+}
+function routesOk(){
+  const reach=(fromName,fieldName)=>{
+    const f=S.fields[fieldName];
+    return rectCells(MAP.rects[fromName]).some(i=>f[i]>=0 && !S.grid[i]);
+  };
+  for(const rt of MAP.routes){
+    let first = rt.wps[0]==='@BRANCH'? null : rt.wps[0];
+    if(rt.wps[0]!=='@BRANCH'){
+      for(const sp of rt.spawns) if(!reach(sp, rt.wps[0])) return false;
+    }
+    const seqs = rt.wps.includes('@BRANCH')
+      ? [ rt.wps.slice(0,-1).concat(MAP.branches.left), rt.wps.slice(0,-1).concat(MAP.branches.right) ]
+      : [rt.wps];
+    for(const seq of seqs){
+      const flat = seq.filter(x=>x!=='@BRANCH');
+      if(rt.wps[0]==='@BRANCH'){}
+      for(let k=0;k<flat.length-1;k++){
+        if(!reach(flat[k], flat[k+1])) return false;
+      }
     }
   }
-  if(!gridOverride){ S.dist=d; }
-  return d;
-}
-function canPlaceAt(c,r){
-  if(!buildable(c,r) || S.grid[r][c]) return false;
-  // creeps standing here?
-  for(const cr of S.creeps){ if(!cr.dead && Math.round(cr.x)===c && Math.round(cr.y)===r) return false; }
-  S.grid[r][c]={tmp:true};
-  const d=computeDist(S.grid);
-  S.grid[r][c]=null;
-  if(d[SPAWN.r][SPAWN.c]===-1) return false;
-  for(const cr of S.creeps){ if(!cr.dead && d[Math.round(cr.y)][Math.round(cr.x)]===-1) return false; }
+  // all living creeps must still reach their current target
+  for(const cr of S.creeps){
+    if(cr.dead) continue;
+    const f=S.fields[cr.wps[cr.wpIdx]];
+    const i=Math.round(cr.y)*W+Math.round(cr.x);
+    if(f[i]<0) return false;
+  }
   return true;
 }
 
@@ -287,9 +369,7 @@ function buildTowerBar(){
     bar.appendChild(ch);
   });
 }
-function refreshChips(){
-  race.towers.forEach(t=>{ t._chip.classList.toggle('poor', t.cost>S.gold); });
-}
+function refreshChips(){ race.towers.forEach(t=>{ t._chip.classList.toggle('poor', t.cost>S.gold); }); }
 function fmtSp(t){
   const sp=t.sp||{}; const bits=[];
   if(sp.slow) bits.push('slows');
@@ -310,74 +390,102 @@ function showTowerInfo(t, placed){
   const dps = ((t.dmin+t.dmax)/2/t.cd).toFixed(0);
   ib.innerHTML=`<div class="row1"><span style="width:14px;height:14px;border-radius:4px;background:${race.color};display:inline-block"></span>
     ${t.name} ${placed?'':`· <span style="color:#ffd86b">${t.cost}g</span>`}</div>
-    <div class="stats">dmg ${t.dmin}–${t.dmax} (${t.atk}) · ${t.cd.toFixed(2)}s · range ${rangeCells(t.range).toFixed(1)} · ~${dps} dps${fmtSp(t)}</div>
+    <div class="stats">dmg ${t.dmin}–${t.dmax} (${t.atk}) · ${t.cd.toFixed(2)}s · range ${Math.round(t.range)} · ~${dps} dps${fmtSp(t)}</div>
     ${t.tip?`<div class="tipTxt">${t.tip}</div>`:''}
-    <div class="acts">${placed?`<button class="sellB" id="sellBtn">Sell for ${Math.floor(t.cost*GAME_DATA.meta.sell)}g</button>`:
-      `<span style="opacity:.55;font-size:10.5px;align-self:center">Tap an empty tile to build</span>`}</div>`;
-  if(placed){ $('sellBtn').onclick=()=>sellTower(placed); }
+    <div class="acts">${placed?`<button class="sellB" id="sellBtn">Sell for ${Math.floor(t.cost*GAME_DATA.meta.sell)}g</button><button id="closeBtn">Close</button>`:
+      `<span style="opacity:.55;font-size:10.5px;align-self:center">Tap a snow tile to build (zoom in!)</span>`}</div>`;
+  if(placed){ $('sellBtn').onclick=()=>sellTower(placed); $('closeBtn').onclick=hideInfo; }
 }
-function hideInfo(){ $('infoBox').classList.remove('on'); S.selTower=null; }
+function hideInfo(){ $('infoBox').classList.remove('on'); if(S) S.selTower=null; }
 
 /* ================= build / sell ================= */
 function tryBuild(c,r){
   const t=S.selChip; if(!t) return;
+  const i=r*W+c;
   if(t.cost>S.gold){ toast('Not enough gold'); sfx('no'); return; }
-  if(!canPlaceAt(c,r)){ toast(buildable(c,r)?'That would block the path!':'Cannot build there'); sfx('no'); return; }
+  if(cellType[i]!==2 || S.grid[i]){ toast(cellType[i]===1?'Creep path — cannot build on the road':'Cannot build there'); sfx('no'); return; }
+  for(const cr of S.creeps){ if(!cr.dead && Math.round(cr.x)===c && Math.round(cr.y)===r){ toast('A creep is in the way'); sfx('no'); return; } }
+  S.grid[i]=1;
+  rebuildFields();
+  if(!routesOk()){
+    S.grid[i]=0; rebuildFields();
+    toast('That would fully block the creeps!'); sfx('no'); return;
+  }
   S.gold-=t.cost;
-  const tw={ type:t, c, r, cd:0, kills:0, shred:new WeakSet ? null : null };
-  S.towers.push(tw); S.grid[r][c]=tw;
-  computeDist();
+  const tw={ type:t, c, r, cd:0, kills:0 };
+  S.towers.push(tw); S.towerAt[i]=tw;
   sfx('build'); puff(c,r,race.color);
   updateHUD();
 }
 function sellTower(tw){
   const refund=Math.floor(tw.type.cost*GAME_DATA.meta.sell);
   S.gold+=refund;
-  S.grid[tw.r][tw.c]=null;
+  const i=tw.r*W+tw.c;
+  S.grid[i]=0; delete S.towerAt[i];
   S.towers=S.towers.filter(x=>x!==tw);
-  computeDist(); hideInfo(); sfx('sell'); puff(tw.c,tw.r,'#ffd86b');
+  rebuildFields(); hideInfo(); sfx('sell'); puff(tw.c,tw.r,'#ffd86b');
   S.texts.push({x:tw.c,y:tw.r,txt:'+'+refund,t:0,color:'#ffd86b'});
   updateHUD();
 }
 
 /* ================= waves ================= */
 function updateWaveInfo(){
-  if(S.spawning){
-    const w=S.spawning.w;
-    const alive=S.creeps.filter(c=>!c.dead && c.w.level===w.level).length + S.spawning.left;
-    $('nextTxt').textContent=`⚔️ Level ${w.level}: ${w.name} — ${alive} left`;
-    $('callBtn').style.display='none';
-    return;
-  }
+  const alive=S.creeps.filter(c=>!c.dead).length + S.spawnQueues.reduce((a,q)=>a+q.left,0);
   const nx=GAME_DATA.waves[S.waveNo];
-  if(!nx){ $('nextTxt').textContent='All waves cleared!'; $('callBtn').style.display='none'; return; }
-  $('callBtn').style.display='';
-  const eta=Math.max(0,Math.ceil(S.nextAt-S.clock));
-  $('nextTxt').textContent=`Next: L${nx.level} ${nx.name} ×${nx.amount} · ${Math.round(nx.hp*diff.hp)} hp · ${eta}s`;
+  let txt = alive? `⚔️ ${alive} creeps marching` : '';
+  if(nx){
+    const eta=Math.max(0,Math.ceil(S.nextAt-S.clock));
+    txt += (txt?' · ':'') + `Next: L${nx.level} ${nx.name} ×${nx.amount} · ${Math.round(nx.hp*diff.hp)} hp · ${eta}s`;
+    $('callBtn').style.display = S.spawnQueues.length? 'none':'';
+  } else {
+    if(!txt) txt='All waves cleared!';
+    $('callBtn').style.display='none';
+  }
+  $('nextTxt').textContent=txt;
 }
 $('callBtn').onclick=()=>{ if(S&&!S.over){ S.nextAt=S.clock; } };
+
 function launchWave(){
   const w=GAME_DATA.waves[S.waveNo]; if(!w) return;
-  S.waveNo++;
-  S.spawning={w, left:w.amount, t:0, gap:w.boss?1:0.65, alive:0};
+  S.waveNo++; S.curWave=w;
+  S.liveLevels[w.level]=w;
+  S.nextAt=S.clock+GAME_DATA.meta.waveGap;   // 30s cadence, like the map's Next_Level timer
+  // distribute creeps across the 6 real spawn gates (round robin)
+  const gates=[];
+  for(const rt of MAP.routes) for(const sp of rt.spawns) gates.push({sp, rt});
+  const queues={};
+  for(let k=0;k<w.amount;k++){
+    const g=gates[k%gates.length];
+    (queues[g.sp]=queues[g.sp]||{sp:g.sp, rt:g.rt, w, left:0, t:rand(0,.4)}).left++;
+  }
+  S.spawnQueues.push(...Object.values(queues));
   sfx('wave');
   updateHUD(); updateWaveInfo();
 }
-function spawnCreep(w){
+function resolveWps(rt){
+  if(rt.wps.includes('@BRANCH')){
+    S.branchFlip=!S.branchFlip;
+    return rt.wps.slice(0,-1).concat(S.branchFlip? MAP.branches.left : MAP.branches.right);
+  }
+  return rt.wps.slice();
+}
+function spawnCreep(q){
+  const w=q.w;
   const hp=Math.round(w.hp*diff.hp);
-  S.creeps.push({ x:SPAWN.c+rand(-.25,.25), y:SPAWN.r, hp, maxhp:hp, w,
+  const rc=MAP.rects[q.sp];
+  const cells=rectCells(rc);
+  const i=cells[rint(0,cells.length-1)];
+  S.creeps.push({ x:i%W, y:(i-(i%W))/W, hp, maxhp:hp, w,
+    wps:resolveWps(q.rt), wpIdx:0,
     speed:speedCells(w.ms), slow:1, slowT:0, permSlow:1, immob:false, armor:w.armor,
-    dead:false, prog:0, ofs:rand(-.18,.18), wob:Math.random()*7 });
+    dead:false, prog:0, wob:Math.random()*7 });
 }
 
 /* ================= combat ================= */
-function creepPos(cr){ return {x:cr.x, y:cr.y}; }
 function dist2(ax,ay,bx,by){ const dx=ax-bx, dy=ay-by; return dx*dx+dy*dy; }
-
 function towerTick(tw, dt){
   tw.cd-=dt; if(tw.cd>0) return;
   const t=tw.type, R=rangeCells(t.range), sp=t.sp||{};
-  // aura towers act on all in range
   if(sp.auraSlow||sp.auraPct||sp.voidKill){
     let acted=false;
     for(const cr of S.creeps){
@@ -387,12 +495,10 @@ function towerTick(tw, dt){
       if(sp.auraSlow){ if(sp.permanent){ cr.permSlow=Math.min(cr.permSlow, sp.auraSlow);} else { cr.slow=Math.min(cr.slow,sp.auraSlow); cr.slowT=2; } }
       if(sp.auraPct && !cr.w.boss){ hurt(cr, cr.hp*sp.auraPct, tw, true); }
       if(sp.voidKill){ hurt(cr, cr.w.boss? cr.hp*(sp.bossPct||.05) : cr.hp+9999, tw, true); }
-      ring(tw.c,tw.r,R,race.color);
     }
-    if(acted) tw.cd=t.cd;
+    if(acted){ tw.cd=t.cd; ring(tw.c,tw.r,R,race.color); }
     return;
   }
-  // pick furthest-progressed target(s) in range
   const inR=[];
   for(const cr of S.creeps){
     if(cr.dead) continue;
@@ -400,13 +506,9 @@ function towerTick(tw, dt){
   }
   if(!inR.length) return;
   inR.sort((a,b)=>b.prog-a.prog);
-  const n = sp.multi? Math.min(sp.multi,inR.length) : (sp.chain? 1 : 1);
-  for(let i=0;i<n;i++) fire(tw, inR[i]);
+  const n = sp.multi? Math.min(sp.multi,inR.length) : 1;
+  for(let i=0;i<n;i++) S.shots.push({x:tw.c,y:tw.r,tx:inR[i],ttype:t,tw,spd:28,chainLeft:(t.sp&&t.sp.chain)||0});
   tw.cd=t.cd;
-}
-function fire(tw, cr){
-  const t=tw.type;
-  S.shots.push({x:tw.c,y:tw.r,tx:cr,ttype:t,tw,spd:14,chainLeft:(t.sp&&t.sp.chain)||0});
 }
 function shotHit(sh){
   const t=sh.ttype, cr=sh.tx, sp=t.sp||{};
@@ -422,15 +524,15 @@ function shotHit(sh){
     for(const o of S.creeps){
       if(o===cr||o.dead) continue;
       const d2v=dist2(cr.x,cr.y,o.x,o.y);
-      if(d2v<=1.4*1.4) hurt(o, rint(t.dmin,t.dmax)*(d2v<=.6*.6?0.7:0.35), sh.tw);
+      if(d2v<=3*3) hurt(o, rint(t.dmin,t.dmax)*(d2v<=1.5*1.5?0.7:0.35), sh.tw);
     }
-    ring(cr.x,cr.y,1.1,race.color);
+    ring(cr.x,cr.y,2.4,race.color);
   }
   if(sh.chainLeft>1){
     let nxt=null,best=1e9;
     for(const o of S.creeps){ if(o.dead||o===cr) continue;
-      const d=dist2(cr.x,cr.y,o.x,o.y); if(d<best&&d<9){best=d;nxt=o;} }
-    if(nxt){ S.shots.push({x:cr.x,y:cr.y,tx:nxt,ttype:sh.ttype,tw:sh.tw,spd:18,chainLeft:sh.chainLeft-1,zap:true}); }
+      const d=dist2(cr.x,cr.y,o.x,o.y); if(d<best&&d<36){best=d;nxt=o;} }
+    if(nxt){ S.shots.push({x:cr.x,y:cr.y,tx:nxt,ttype:sh.ttype,tw:sh.tw,spd:34,chainLeft:sh.chainLeft-1,zap:true}); }
   }
 }
 function hurt(cr,dmg,tw,pure){
@@ -465,21 +567,25 @@ function loop(ts){
 }
 function tick(dt){
   S.clock+=dt;
-  // wave scheduling
-  if(!S.spawning && GAME_DATA.waves[S.waveNo] && S.clock>=S.nextAt) launchWave();
-  if(S.spawning){
-    S.spawning.t-=dt;
-    if(S.spawning.left>0 && S.spawning.t<=0){ spawnCreep(S.spawning.w); S.spawning.left--; S.spawning.t=S.spawning.gap; }
-    if(S.spawning.left===0){
-      const anyAlive=S.creeps.some(c=>!c.dead && c.w.level===S.spawning.w.level);
-      if(!anyAlive){
-        const bonus=GAME_DATA.meta.bonusBase + GAME_DATA.meta.bonusInc*(S.spawning.w.level-1);
-        S.gold+=bonus; toast(`Level ${S.spawning.w.level} cleared! +${bonus}g bonus`);
-        if(S.spawning.w.level===32){ S.postGame=true; toast('FINAL BONUS WAVE: the DEMON SHEEP are coming!!'); }
-        S.spawning=null; S.nextAt=S.clock+GAME_DATA.meta.waveGap;
-        if(!GAME_DATA.waves[S.waveNo]){ endGame(true); }
-        updateHUD();
-      }
+  if(!S.spawnQueues.length && GAME_DATA.waves[S.waveNo] && S.clock>=S.nextAt) launchWave();
+  // spawning
+  for(const q of S.spawnQueues){
+    q.t-=dt;
+    if(q.left>0 && q.t<=0){ spawnCreep(q); q.left--; q.t=q.w.boss?1:0.7; }
+  }
+  S.spawnQueues=S.spawnQueues.filter(q=>q.left>0);
+  // level-clear bonuses (waves can overlap, track each level separately)
+  for(const lv in S.liveLevels){
+    const w=S.liveLevels[lv];
+    const pending=S.spawnQueues.some(q=>q.w.level===w.level);
+    const alive=S.creeps.some(c=>!c.dead && c.w.level===w.level);
+    if(!pending && !alive){
+      delete S.liveLevels[lv];
+      const bonus=GAME_DATA.meta.bonusBase + GAME_DATA.meta.bonusInc*(w.level-1);
+      S.gold+=bonus; toast(`Level ${w.level} cleared! +${bonus}g bonus`);
+      if(w.level===32){ S.postGame=true; toast('FINAL BONUS WAVE: the DEMON SHEEP are coming!!'); }
+      if(w.level===33 || (!GAME_DATA.waves[S.waveNo] && !Object.keys(S.liveLevels).length)) endGame(true);
+      updateHUD();
     }
   }
   updateWaveInfo();
@@ -487,38 +593,40 @@ function tick(dt){
   for(const cr of S.creeps){
     if(cr.dead) continue;
     cr.slowT-=dt; if(cr.slowT<=0) cr.slow=1;
-    if(cr.immob){ // frozen solid — crumbles to dust after a few seconds
+    if(cr.immob){
       cr.immobT=(cr.immobT||0)+dt;
       if(cr.immobT>6){ cr.dead=true; burst(cr.x,cr.y,'#aee6ff',12); sfx('die'); }
       continue;
     }
     const c=Math.round(cr.x), r=Math.round(cr.y);
-    let bc=c, br=r, bd=S.dist[r]?.[c] ?? 999;
-    if(bd===-1) bd=999;
-    for(const [dc,dr] of [[1,0],[-1,0],[0,1],[0,-1]]){
-      const nc=c+dc, nr=r+dr;
-      if(nc<0||nc>=COLS||nr<0||nr>=ROWS||S.grid[nr][nc]) continue;
-      const dv=S.dist[nr][nc];
-      if(dv!==-1 && dv<bd){ bd=dv; bc=nc; br=nr; }
+    // reached current waypoint? (standing on a seed cell of its field)
+    const fCur=S.fields[cr.wps[cr.wpIdx]];
+    if(fCur[r*W+c]===0){
+      if(cr.wpIdx>=cr.wps.length-1){
+        cr.dead=true;
+        S.lives-=1; sfx('leak');
+        S.texts.push({x:cr.x,y:cr.y,txt:'boarded!',t:0,color:'#ff6a5e'});
+        if(S.lives<=0){ S.lives=0; endGame(!!S.postGame); }
+        updateHUD();
+        continue;
+      }
+      cr.wpIdx++;
     }
-    const tx=bc+cr.ofs, ty=br;
+    const f=S.fields[cr.wps[cr.wpIdx]];
+    const i=r*W+c;
+    let bi=i, bd=f[i]<0?32767:f[i];
+    if(c>0 && cellType[i-1]>0 && !S.grid[i-1] && f[i-1]>=0 && f[i-1]<bd){ bd=f[i-1]; bi=i-1; }
+    if(c<W-1 && cellType[i+1]>0 && !S.grid[i+1] && f[i+1]>=0 && f[i+1]<bd){ bd=f[i+1]; bi=i+1; }
+    if(r>0 && cellType[i-W]>0 && !S.grid[i-W] && f[i-W]>=0 && f[i-W]<bd){ bd=f[i-W]; bi=i-W; }
+    if(r<H-1 && cellType[i+W]>0 && !S.grid[i+W] && f[i+W]>=0 && f[i+W]<bd){ bd=f[i+W]; bi=i+W; }
+    const tx=bi%W, ty=(bi-bi%W)/W;
     const dx=tx-cr.x, dy=ty-cr.y, len=Math.hypot(dx,dy)||1;
     const v=cr.speed*cr.slow*cr.permSlow*dt;
     cr.x+=dx/len*Math.min(v,len); cr.y+=dy/len*Math.min(v,len);
     cr.prog+=v;
-    if(Math.round(cr.y)>=GOAL.r && Math.abs(cr.y-GOAL.r)<.3){
-      cr.dead=true;
-      const loss=cr.w.boss?10:1;
-      S.lives-=loss; sfx('leak');
-      S.texts.push({x:cr.x,y:cr.y,txt:'-'+loss+' ❤',t:0,color:'#ff6a5e'});
-      if(S.lives<=0){ S.lives=0; endGame(!!S.postGame); }
-      updateHUD();
-    }
   }
   S.creeps=S.creeps.filter(c=>!c.dead);
-  // towers
   for(const tw of S.towers) towerTick(tw,dt);
-  // shots
   for(const sh of S.shots){
     if(sh.done) continue;
     if(sh.tx.dead){ sh.done=true; continue; }
@@ -528,12 +636,11 @@ function tick(dt){
     else { sh.x+=dx/len*step; sh.y+=dy/len*step; }
   }
   S.shots=S.shots.filter(s=>!s.done);
-  // fx
-  for(const p of S.parts){ p.t+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=2*dt; }
+  for(const p of S.parts){ p.t+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=4*dt; }
   S.parts=S.parts.filter(p=>p.t<p.life);
   for(const t of S.texts) t.t+=dt;
-  S.texts=S.texts.filter(t=>t.t<1);
-  for(const f of S.snow){ f.y+=f.v*dt*2; f.x+=Math.sin(S.clock+f.ph)*.12*dt; if(f.y>ROWS){f.y=-.2;f.x=Math.random()*COLS;} }
+  S.texts=S.texts.filter(t=>t.t<1.2);
+  for(const f of S.snow){ f.y+=f.v*dt; f.x+=Math.sin(S.clock+f.ph)*.4*dt; if(f.y>H){f.y=0;f.x=Math.random()*W;} }
 }
 
 function endGame(win){
@@ -545,211 +652,254 @@ function endGame(win){
     const kills=S.towers.reduce((a,t)=>a+t.kills,0);
     $('endBody').innerHTML = win?
       (S.postGame && S.lives<=0 ?
-        `You beat all 32 real waves on <b>${diff.name}</b>... and then the DEMON SHEEP flattened your gate.<br>A true Wintermaul ending. ${kills} kills as ${race.name}.`:
+        `You beat all 32 real waves on <b>${diff.name}</b>... and then the DEMON SHEEP stormed the ship.<br>A true Wintermaul ending. ${kills} kills as ${race.name}.`:
         `You survived all 33 waves of Wintermaul on <b>${diff.name}</b>!<br>${S.lives} lives left · ${kills} kills as ${race.name}.`):
-      `The creeps broke through at wave ${S.waveNo} on <b>${diff.name}</b>.<br>${kills} kills as ${race.name}. Build a longer maze next time!`;
+      `The creeps boarded the ship at wave ${S.waveNo} on <b>${diff.name}</b>.<br>${kills} kills as ${race.name}. Maze the dock approach harder next time!`;
   }, win? 400: 800);
   sfx(win?'win':'leak');
 }
 
-/* ================= fx helpers ================= */
-function burst(x,y,color,n){ for(let i=0;i<n;i++){ const a=Math.random()*6.283, s=rand(.5,3);
+/* ================= fx ================= */
+function burst(x,y,color,n){ for(let i=0;i<n;i++){ const a=Math.random()*6.283, s=rand(1,6);
   S.parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:0,life:rand(.3,.7),color}); } }
 function puff(x,y,color){ burst(x,y,color,7); }
-function flash(cr,color){ S.parts.push({x:cr.x,y:cr.y,vx:0,vy:-1,t:0,life:.3,color}); }
+function flash(cr,color){ S.parts.push({x:cr.x,y:cr.y,vx:0,vy:-2,t:0,life:.3,color}); }
 function ring(x,y,rad,color){ S.parts.push({x,y,vx:0,vy:0,t:0,life:.35,color,ring:rad}); }
 function waveColor(lv){ const h=(lv*47)%360; return `hsl(${h} 70% 60%)`; }
 
 /* ================= render ================= */
 function render(){
-  const W=COLS*CELL, H=ROWS*CELL;
-  ctx.clearRect(0,0,W,H);
-  // background
-  const bg=ctx.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,'#0f1c31'); bg.addColorStop(1,'#0a1424');
-  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
-  // zones
-  ctx.fillStyle='rgba(126,200,255,.07)'; ctx.fillRect(0,0,W,2*CELL);
-  ctx.fillStyle='rgba(255,214,107,.06)'; ctx.fillRect(0,(ROWS-2)*CELL,W,2*CELL);
-  // grid
-  ctx.strokeStyle='rgba(90,130,190,.10)'; ctx.lineWidth=1;
-  ctx.beginPath();
-  for(let c=1;c<COLS;c++){ ctx.moveTo(c*CELL,2*CELL); ctx.lineTo(c*CELL,(ROWS-2)*CELL); }
-  for(let r=2;r<ROWS-1;r++){ ctx.moveTo(0,r*CELL); ctx.lineTo(W,r*CELL); }
-  ctx.stroke();
-  // path hint (flow field arrows lite): shade walkable dist gradient
-  if(S.dist){
-    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
-      if(S.grid[r][c]||S.dist[r][c]===-1) continue;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.clearRect(0,0,VIEW_W,VIEW_H);
+  ctx.fillStyle='#060b14'; ctx.fillRect(0,0,VIEW_W,VIEW_H);
+  const s=cam.s;
+  ctx.setTransform(DPR*s,0,0,DPR*s,-cam.x*s*DPR,-cam.y*s*DPR);
+  ctx.imageSmoothingEnabled = s<7;
+  ctx.drawImage(bgCanvas,0,0,W,H);
+  // viewport bounds in cells
+  const vx0=Math.max(0,Math.floor(cam.x)), vy0=Math.max(0,Math.floor(cam.y));
+  const vx1=Math.min(W,Math.ceil(cam.x+VIEW_W/s)), vy1=Math.min(H,Math.ceil(cam.y+VIEW_H/s));
+  // buildable tint + grid while placing
+  if(S.selChip && s>=7){
+    ctx.fillStyle='rgba(110,220,140,.12)';
+    for(let r=vy0;r<vy1;r++) for(let c=vx0;c<vx1;c++){
+      const i=r*W+c;
+      if(cellType[i]===2 && !S.grid[i]) ctx.fillRect(c,r,1,1);
     }
+    ctx.strokeStyle='rgba(120,160,220,.15)'; ctx.lineWidth=1/s;
+    ctx.beginPath();
+    for(let c=vx0;c<=vx1;c++){ ctx.moveTo(c,vy0); ctx.lineTo(c,vy1); }
+    for(let r=vy0;r<=vy1;r++){ ctx.moveTo(vx0,r); ctx.lineTo(vx1,r); }
+    ctx.stroke();
   }
-  // spawn portal & goal gate
-  const px=(SPAWN.c+.5)*CELL, py=(SPAWN.r+.9)*CELL;
-  ctx.save();
-  ctx.translate(px,py);
-  const g1=ctx.createRadialGradient(0,0,2,0,0,CELL*1.1);
-  g1.addColorStop(0,'rgba(126,200,255,.9)'); g1.addColorStop(1,'rgba(126,200,255,0)');
-  ctx.fillStyle=g1; ctx.beginPath(); ctx.arc(0,0,CELL*1.1,0,7); ctx.fill();
-  ctx.fillStyle='#0b1220'; ctx.beginPath(); ctx.ellipse(0,0,CELL*.45,CELL*.62,0,0,7); ctx.fill();
-  ctx.strokeStyle='#7ec8ff'; ctx.lineWidth=2; ctx.stroke();
+  // spawn gates
+  for(const rt of MAP.routes) for(const sp of rt.spawns){
+    const rc=MAP.rects[sp], cx=(rc[0]+rc[2])/2, cy=rc[3];
+    ctx.fillStyle='rgba(126,200,255,.25)';
+    ctx.fillRect(rc[0],rc[1],rc[2]-rc[0],rc[3]-rc[1]);
+    ctx.fillStyle='#7ec8ff';
+    ctx.beginPath(); ctx.moveTo(cx-1.6,cy-1); ctx.lineTo(cx+1.6,cy-1); ctx.lineTo(cx,cy+1.4); ctx.closePath(); ctx.fill();
+  }
+  // the ship at the Load dock
+  const lr=MAP.rects['Load'], lx=(lr[0]+lr[2])/2, ly=(lr[1]+lr[3])/2;
+  ctx.save(); ctx.translate(lx,ly+1.5);
+  ctx.fillStyle='#6b4a2c';
+  ctx.beginPath(); ctx.moveTo(-4,0); ctx.lineTo(4,0); ctx.lineTo(2.6,2.2); ctx.lineTo(-2.6,2.2); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#8a6238'; ctx.fillRect(-.35,-3.6,.7,3.6);
+  ctx.fillStyle='#e8ecf4';
+  ctx.beginPath(); ctx.moveTo(-.35,-3.4); ctx.lineTo(-3,-1); ctx.lineTo(-.35,-1); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(.35,-3.6); ctx.lineTo(3.2,-1); ctx.lineTo(.35,-1); ctx.closePath(); ctx.fill();
   ctx.restore();
-  const gx=(GOAL.c+.5)*CELL, gy=(GOAL.r+.4)*CELL;
-  ctx.save(); ctx.translate(gx,gy);
-  ctx.fillStyle='#2a2416';
-  ctx.fillRect(-CELL*.7,-CELL*.15,CELL*1.4,CELL*.55);
-  ctx.fillStyle='#ffd86b';
-  for(let i=-2;i<=2;i++){ ctx.fillRect(i*CELL*.28-2,-CELL*.38,5,CELL*.28); }
-  ctx.restore();
-  // snow
-  ctx.fillStyle='rgba(220,235,255,.5)';
-  for(const f of S.snow){ ctx.fillRect(f.x*CELL, f.y*CELL, 2, 2); }
-
-  // towers
-  for(const tw of S.towers) drawTower(tw);
-  // range ring for selection
+  // towers (viewport cull)
+  for(const tw of S.towers){
+    if(tw.c<vx0-1||tw.c>vx1||tw.r<vy0-1||tw.r>vy1) continue;
+    drawTower(tw,s);
+  }
+  // selection range ring
   const selT=S.selTower;
   if(selT){
-    ctx.strokeStyle=race.color; ctx.setLineDash([5,5]); ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.arc((selT.c+.5)*CELL,(selT.r+.5)*CELL, rangeCells(selT.type.range)*CELL,0,7); ctx.stroke();
+    ctx.strokeStyle=race.color; ctx.setLineDash([6/s,6/s]); ctx.lineWidth=2/s;
+    ctx.beginPath(); ctx.arc(selT.c+.5,selT.r+.5, rangeCells(selT.type.range),0,7); ctx.stroke();
     ctx.setLineDash([]);
   }
   // creeps
-  for(const cr of S.creeps){ if(!cr.dead) drawCreep(cr); }
+  for(const cr of S.creeps){
+    if(cr.dead) continue;
+    if(cr.x<vx0-2||cr.x>vx1+2||cr.y<vy0-2||cr.y>vy1+2) continue;
+    drawCreep(cr,s);
+  }
   // shots
+  ctx.lineWidth=2.5/s;
   for(const sh of S.shots){
-    const x1=sh.x*CELL+CELL/2, y1=sh.y*CELL+CELL/2, x2=sh.tx.x*CELL+CELL/2, y2=sh.tx.y*CELL+CELL/2;
     if(sh.zap || sh.chainLeft){
-      ctx.strokeStyle='#bfe8ff'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(x1,y1);
-      const mx=(x1+x2)/2+rand(-6,6), my=(y1+y2)/2+rand(-6,6);
-      ctx.lineTo(mx,my); ctx.lineTo(x2,y2); ctx.stroke();
+      ctx.strokeStyle='#bfe8ff';
+      ctx.beginPath(); ctx.moveTo(sh.x+.5,sh.y+.5);
+      ctx.lineTo((sh.x+sh.tx.x)/2+.5+rand(-.4,.4),(sh.y+sh.tx.y)/2+.5+rand(-.4,.4));
+      ctx.lineTo(sh.tx.x+.5,sh.tx.y+.5); ctx.stroke();
     } else {
-      ctx.fillStyle=race.color; ctx.shadowColor=race.color; ctx.shadowBlur=6;
-      ctx.beginPath(); ctx.arc(x1,y1,3.2,0,7); ctx.fill(); ctx.shadowBlur=0;
+      ctx.fillStyle=race.color;
+      ctx.beginPath(); ctx.arc(sh.x+.5,sh.y+.5, Math.max(.18, 3.5/s),0,7); ctx.fill();
     }
   }
   // particles
   for(const p of S.parts){
     const a=1-p.t/p.life;
     if(p.ring){
-      ctx.strokeStyle=p.color; ctx.globalAlpha=a*.6; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.arc(p.x*CELL+CELL/2,p.y*CELL+CELL/2,p.ring*CELL*(p.t/p.life),0,7); ctx.stroke();
+      ctx.strokeStyle=p.color; ctx.globalAlpha=a*.5; ctx.lineWidth=2/s;
+      ctx.beginPath(); ctx.arc(p.x+.5,p.y+.5,p.ring*(p.t/p.life),0,7); ctx.stroke();
       ctx.globalAlpha=1;
     } else {
       ctx.fillStyle=p.color; ctx.globalAlpha=a;
-      ctx.fillRect(p.x*CELL+CELL/2-2,p.y*CELL+CELL/2-2,4,4);
+      const ps=Math.max(.15,4/s);
+      ctx.fillRect(p.x+.5-ps/2,p.y+.5-ps/2,ps,ps);
       ctx.globalAlpha=1;
     }
   }
-  // floating texts
+  // floating texts (screen-space size)
+  ctx.setTransform(DPR,0,0,DPR,0,0);
   ctx.font='700 11px sans-serif'; ctx.textAlign='center';
   for(const t of S.texts){
-    ctx.fillStyle=t.color; ctx.globalAlpha=1-t.t;
-    ctx.fillText(t.txt, t.x*CELL+CELL/2, t.y*CELL+CELL/2-t.t*18);
+    const sx=(t.x+.5-cam.x)*s, sy=(t.y+.5-cam.y)*s - t.t*20;
+    if(sx<-20||sx>VIEW_W+20||sy<-20||sy>VIEW_H+20) continue;
+    ctx.fillStyle=t.color; ctx.globalAlpha=Math.max(0,1-t.t/1.2);
+    ctx.fillText(t.txt, sx, sy);
     ctx.globalAlpha=1;
   }
-  // ghost placement preview
-  if(S.selChip && S.ghost){
-    const {c,r}=S.ghost, ok=canPlaceAt(c,r) && S.selChip.cost<=S.gold;
-    ctx.globalAlpha=.45;
-    ctx.fillStyle= ok? race.color : '#ff5a4e';
-    ctx.fillRect(c*CELL+3,r*CELL+3,CELL-6,CELL-6);
-    ctx.globalAlpha=1;
-    ctx.strokeStyle=ok?race.color:'#ff5a4e'; ctx.setLineDash([4,4]);
-    ctx.beginPath(); ctx.arc((c+.5)*CELL,(r+.5)*CELL, rangeCells(S.selChip.range)*CELL,0,7); ctx.stroke();
-    ctx.setLineDash([]);
+  // snow (screen space light)
+  ctx.fillStyle='rgba(220,235,255,.4)';
+  for(const f of S.snow){
+    const sx=(f.x-cam.x)*s, sy=(f.y-cam.y)*s;
+    if(sx>=0&&sx<VIEW_W&&sy>=0&&sy<VIEW_H) ctx.fillRect(sx,sy,2,2);
   }
 }
-function drawTower(tw){
-  const t=tw.type, x=tw.c*CELL, y=tw.r*CELL, cx=x+CELL/2, cy=y+CELL/2;
+function drawTower(tw,s){
+  const t=tw.type;
   const tier=race.towers.indexOf(t);
-  const sz=CELL*(.5+.035*tier);
+  const sz=.62+.045*tier;
   ctx.fillStyle='#0d1626';
-  ctx.fillRect(x+2,y+2,CELL-4,CELL-4);
-  ctx.strokeStyle='rgba(120,160,220,.25)'; ctx.strokeRect(x+2.5,y+2.5,CELL-5,CELL-5);
-  ctx.save(); ctx.translate(cx,cy);
-  ctx.shadowColor=race.color; ctx.shadowBlur=8;
+  ctx.fillRect(tw.c+.06,tw.r+.06,.88,.88);
+  ctx.strokeStyle='rgba(120,160,220,.35)'; ctx.lineWidth=1.2/s;
+  ctx.strokeRect(tw.c+.06,tw.r+.06,.88,.88);
+  ctx.save(); ctx.translate(tw.c+.5,tw.r+.5);
   ctx.fillStyle=race.color;
   const shape=tier%4;
   if(shape===0){ ctx.beginPath(); ctx.arc(0,0,sz/2,0,7); ctx.fill(); }
   else if(shape===1){ ctx.rotate(Math.PI/4); ctx.fillRect(-sz/2.4,-sz/2.4,sz/1.2,sz/1.2); }
   else if(shape===2){ ctx.beginPath();
-    for(let i=0;i<3;i++){ const a=-Math.PI/2+i*2.094; ctx.lineTo(Math.cos(a)*sz/1.7,Math.sin(a)*sz/1.7); }
+    for(let i=0;i<3;i++){ const a=-Math.PI/2+i*2.094; ctx.lineTo(Math.cos(a)*sz/1.6,Math.sin(a)*sz/1.6); }
     ctx.closePath(); ctx.fill(); }
   else { ctx.beginPath();
-    for(let i=0;i<10;i++){ const a=-Math.PI/2+i*.628, rr=i%2?sz/3.4:sz/1.7; ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr); }
+    for(let i=0;i<10;i++){ const a=-Math.PI/2+i*.628, rr=i%2?sz/3.2:sz/1.6; ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr); }
     ctx.closePath(); ctx.fill(); }
-  ctx.shadowBlur=0;
   ctx.fillStyle='rgba(255,255,255,.85)';
-  ctx.beginPath(); ctx.arc(0,-1,sz/6,0,7); ctx.fill();
+  ctx.beginPath(); ctx.arc(0,-.05,sz/6,0,7); ctx.fill();
   ctx.restore();
-  if(tw.cd>0 && tw.cd<t.cd*.25){
-    ctx.fillStyle='rgba(255,255,255,.25)'; ctx.fillRect(x+2,y+2,CELL-4,CELL-4);
-  }
 }
-function drawCreep(cr){
-  const x=cr.x*CELL+CELL/2, y=cr.y*CELL+CELL/2;
-  const R=cr.w.boss? CELL*.42 : CELL*.26;
+function drawCreep(cr,s){
+  const R=cr.w.boss? .6 : .4;
   const col=waveColor(cr.w.level);
-  const wob=Math.sin(S.clock*7+cr.wob)*1.5;
-  ctx.save(); ctx.translate(x,y+wob*.4);
+  const x=cr.x+.5, y=cr.y+.5+Math.sin(S.clock*7+cr.wob)*.05;
   ctx.fillStyle='rgba(0,0,0,.35)';
-  ctx.beginPath(); ctx.ellipse(0,R*.85,R*.9,R*.35,0,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x,y+R*.8,R*.9,R*.35,0,0,7); ctx.fill();
   ctx.fillStyle=col;
-  ctx.shadowColor=col; ctx.shadowBlur=cr.w.boss?12:5;
-  ctx.beginPath(); ctx.arc(0,0,R,0,7); ctx.fill();
-  ctx.shadowBlur=0;
-  ctx.fillStyle='rgba(255,255,255,.9)';
-  ctx.beginPath(); ctx.arc(-R*.3,-R*.2,R*.16,0,7); ctx.arc(R*.3,-R*.2,R*.16,0,7); ctx.fill();
-  ctx.fillStyle='#111';
-  ctx.beginPath(); ctx.arc(-R*.3,-R*.18,R*.07,0,7); ctx.arc(R*.3,-R*.18,R*.07,0,7); ctx.fill();
+  ctx.beginPath(); ctx.arc(x,y,R,0,7); ctx.fill();
+  if(s>=6){
+    ctx.fillStyle='rgba(255,255,255,.9)';
+    ctx.beginPath(); ctx.arc(x-R*.3,y-R*.2,R*.16,0,7); ctx.arc(x+R*.3,y-R*.2,R*.16,0,7); ctx.fill();
+    ctx.fillStyle='#111';
+    ctx.beginPath(); ctx.arc(x-R*.3,y-R*.18,R*.07,0,7); ctx.arc(x+R*.3,y-R*.18,R*.07,0,7); ctx.fill();
+  }
   if(cr.w.boss){
     ctx.fillStyle='#ffd86b';
     ctx.beginPath();
-    ctx.moveTo(-R*.6,-R*.9); ctx.lineTo(-R*.6,-R*1.35); ctx.lineTo(-R*.25,-R*1.02);
-    ctx.lineTo(0,-R*1.45); ctx.lineTo(R*.25,-R*1.02); ctx.lineTo(R*.6,-R*1.35); ctx.lineTo(R*.6,-R*.9);
+    ctx.moveTo(x-R*.6,y-R*.9); ctx.lineTo(x-R*.6,y-R*1.35); ctx.lineTo(x-R*.25,y-R*1.02);
+    ctx.lineTo(x,y-R*1.45); ctx.lineTo(x+R*.25,y-R*1.02); ctx.lineTo(x+R*.6,y-R*1.35); ctx.lineTo(x+R*.6,y-R*.9);
     ctx.closePath(); ctx.fill();
   }
-  if(cr.immob){ ctx.strokeStyle='#3aa0ff'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(0,0,R+3,0,7); ctx.stroke(); }
-  else if(cr.slow<1||cr.permSlow<1){ ctx.fillStyle='rgba(174,230,255,.8)'; ctx.fillRect(-R,-R-1,R*2*.4,2); }
-  ctx.restore();
-  // hp bar
-  const w=cr.w.boss?CELL*1.1:CELL*.7, frac=clamp(cr.hp/cr.maxhp,0,1);
-  ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillRect(x-w/2,y-R-9,w,4);
+  if(cr.immob){ ctx.strokeStyle='#3aa0ff'; ctx.lineWidth=2/s; ctx.beginPath(); ctx.arc(x,y,R+.12,0,7); ctx.stroke(); }
+  const w=cr.w.boss?1.4:.9, frac=clamp(cr.hp/cr.maxhp,0,1);
+  ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillRect(x-w/2,y-R-.35,w,.14);
   ctx.fillStyle=frac>.5?'#5ad06e':frac>.25?'#ffd86b':'#ff5a4e';
-  ctx.fillRect(x-w/2,y-R-9,w*frac,4);
+  ctx.fillRect(x-w/2,y-R-.35,w*frac,.14);
 }
 
-/* ================= input ================= */
-function evtCell(e){
-  const rect=cv.getBoundingClientRect();
-  const p=e.changedTouches? e.changedTouches[0] : e;
-  const c=Math.floor((p.clientX-rect.left)/CELL), r=Math.floor((p.clientY-rect.top)/CELL);
-  if(c<0||c>=COLS||r<0||r>=ROWS) return null;
-  return {c,r};
-}
-let lastMove=null;
-cv.addEventListener('pointermove', e=>{
-  if(!S||S.over) return;
-  const cell=evtCell(e);
-  if(cell && S.selChip && buildable(cell.c,cell.r) && !S.grid[cell.r][cell.c]) S.ghost=cell;
-});
+/* ================= input: pan / pinch / tap ================= */
+const pointers = new Map();
+let pinchBase=null, dragBase=null, moved=false;
 cv.addEventListener('pointerdown', e=>{
   if(!S||S.over) return;
+  cv.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  moved=false;
+  if(pointers.size===1){
+    dragBase={px:e.clientX, py:e.clientY, cx:cam.x, cy:cam.y};
+  } else if(pointers.size===2){
+    const ps=[...pointers.values()];
+    pinchBase={d:Math.hypot(ps[0].x-ps[1].x, ps[0].y-ps[1].y), s:cam.s,
+               mx:(ps[0].x+ps[1].x)/2, my:(ps[0].y+ps[1].y)/2};
+    dragBase=null;
+  }
+});
+cv.addEventListener('pointermove', e=>{
+  if(!S||!pointers.has(e.pointerId)) return;
+  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pointers.size===2 && pinchBase){
+    const ps=[...pointers.values()];
+    const d=Math.hypot(ps[0].x-ps[1].x, ps[0].y-ps[1].y);
+    const rect=cv.getBoundingClientRect();
+    const mx=(ps[0].x+ps[1].x)/2-rect.left, my=(ps[0].y+ps[1].y)/2-rect.top;
+    const wx=cam.x+mx/cam.s, wy=cam.y+my/cam.s;
+    cam.s=clamp(pinchBase.s*d/Math.max(20,pinchBase.d), cam.min, cam.max);
+    cam.x=wx-mx/cam.s; cam.y=wy-my/cam.s; clampCam();
+    moved=true;
+  } else if(pointers.size===1 && dragBase){
+    const dx=e.clientX-dragBase.px, dy=e.clientY-dragBase.py;
+    if(Math.abs(dx)+Math.abs(dy)>8) moved=true;
+    if(moved){
+      cam.x=dragBase.cx-dx/cam.s; cam.y=dragBase.cy-dy/cam.s; clampCam();
+    }
+  }
+});
+function endPointer(e){
+  if(!pointers.has(e.pointerId)) return;
+  pointers.delete(e.pointerId);
+  if(pointers.size<2) pinchBase=null;
+  if(pointers.size===0){
+    if(!moved && S && !S.over){
+      const rect=cv.getBoundingClientRect();
+      const c=Math.floor(cam.x+(e.clientX-rect.left)/cam.s);
+      const r=Math.floor(cam.y+(e.clientY-rect.top)/cam.s);
+      if(c>=0&&c<W&&r>=0&&r<H) tapCell(c,r);
+    }
+    dragBase=null;
+  }
+}
+cv.addEventListener('pointerup', endPointer);
+cv.addEventListener('pointercancel', endPointer);
+cv.addEventListener('wheel', e=>{
+  if(!S) return;
+  e.preventDefault();
+  const rect=cv.getBoundingClientRect();
+  zoomAt(e.clientX-rect.left, e.clientY-rect.top, e.deltaY<0?1.15:1/1.15);
+},{passive:false});
+
+function tapCell(c,r){
   if(AC===null) sfx('build');
-  const cell=evtCell(e); if(!cell) return;
-  const tw=S.grid[cell.r]?.[cell.c];
-  if(tw && !tw.tmp){
-    S.selTower=tw; S.selChip=null; S.ghost=null;
+  const tw=S.towerAt[r*W+c];
+  if(tw){
+    S.selTower=tw; S.selChip=null;
     race.towers.forEach(t=>t._chip.classList.remove('sel'));
     showTowerInfo(tw.type, tw);
     return;
   }
-  if(S.selChip){ S.ghost=cell; tryBuild(cell.c,cell.r); return; }
+  if(S.selChip){
+    if(cam.s<6){ zoomAt((c+.5-cam.x)*cam.s,(r+.5-cam.y)*cam.s, 8/cam.s); toast('Zoomed in — tap again to place'); return; }
+    tryBuild(c,r); return;
+  }
   hideInfo();
-});
+}
 
-/* ================= HUD wiring ================= */
+/* ================= HUD ================= */
 function updateHUD(){
   $('gold').textContent=S.gold;
   $('lives').textContent=S.lives;
